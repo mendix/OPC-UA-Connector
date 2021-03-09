@@ -1,0 +1,12 @@
+.idea
+deployment
+.classpath
+.project
+*.bak
+*.lock
+*.launch
+.settings/
+.gradle/
+.svn/
+.mendix-cache/
+GPUCache/
