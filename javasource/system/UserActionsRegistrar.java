@@ -20,6 +20,7 @@ public class UserActionsRegistrar
     registrator.registerUserAction(opcuaclientmx.actions.OpcUaRefreshSubscription.class);
     registrator.registerUserAction(opcuaclientmx.actions.OpcUaSubscribe.class);
     registrator.registerUserAction(opcuaclientmx.actions.OpcUaUnsubscribe.class);
+    registrator.registerUserAction(opcuaclientmx.actions.OpcUaUpdateCachedServerSettings.class);
     registrator.registerUserAction(opcuaclientmx.actions.OpcUaWrite.class);
     registrator.registerUserAction(system.actions.VerifyPassword.class);
   }

@@ -53,7 +53,7 @@ public class OpcUaRead extends CustomJavaAction<java.lang.String>
 			logger.trace(String.format("[Read] Response from [Server:%s|NodeId:%s]; Response data: \"%s;\"",this.OpcUaServerCfg.getServerID(),this.nodeId,response.toString()) );
 
 		if ( response.getStatusCode() == StatusCode.GOOD )
-			return response.getValue().getValue().toString() + " successfully read from server";
+			return response.getValue().getValue().toString();
 				// logic
 		else {
 			String status = response.getStatusCode().toString();

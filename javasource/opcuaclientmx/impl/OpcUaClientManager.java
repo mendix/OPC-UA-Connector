@@ -43,7 +43,9 @@ public class OpcUaClientManager {
 		//1. Check for an existing client for the serverHelper object in cache
 		//2. If no client is found, a new one is generated.
 		if (clientCache.get(serverHelper.getURL()) != null) {
-			return clientCache.get(serverHelper.getURL());
+			OpcUaClient client = clientCache.get(serverHelper.getURL());
+			
+			return client;
 		}
 		else {
 			OpcUaClient client = buildNewClient(context, serverHelper);
@@ -54,6 +56,35 @@ public class OpcUaClientManager {
 			//root.setLevel(Level.DEBUG);
 			
 			return client;
+		}
+	}
+	public static OpcUaClient updateConfigIfExists(IContext context, OpcUaServerCfg serverHelper) throws CoreException 
+	{
+		//1. Check for an existing client for the serverHelper object in cache
+		//2. If no client is found, a new one is generated.
+		if (clientCache.get(serverHelper.getURL()) != null) {
+			
+			//Disconnect the old client config
+			OpcUaClient client = clientCache.get(serverHelper.getURL());
+			client.disconnect();
+			
+			//Create a new client with the current server configuration
+			client = buildNewClient(context, serverHelper);
+			clientCache.put(serverHelper.getURL(), client); 
+			
+			return client;
+		}
+		
+		return null;
+	}
+	public static void disconnect(OpcUaServerCfg serverHelper) throws CoreException {
+		if (clientCache.get(serverHelper.getURL()) != null) {
+			try {
+				clientCache.remove(serverHelper.getURL()).disconnect().get();
+			}
+			catch (Exception e) {
+				throw new CoreException("Unable to disconnect the session: " + serverHelper.getServerID(), e);
+			}
 		}
 	}
 

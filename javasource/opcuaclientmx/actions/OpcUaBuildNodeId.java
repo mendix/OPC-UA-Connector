@@ -17,19 +17,25 @@ public class OpcUaBuildNodeId extends CustomJavaAction<java.lang.String>
 {
 	private java.lang.Long Namespace;
 	private java.lang.String Identifier;
+	private java.lang.String _type;
 
-	public OpcUaBuildNodeId(IContext context, java.lang.Long Namespace, java.lang.String Identifier)
+	public OpcUaBuildNodeId(IContext context, java.lang.Long Namespace, java.lang.String Identifier, java.lang.String _type)
 	{
 		super(context);
 		this.Namespace = Namespace;
 		this.Identifier = Identifier;
+		this._type = _type;
 	}
 
 	@java.lang.Override
 	public java.lang.String executeAction() throws Exception
 	{
 		// BEGIN USER CODE
-		return (new NodeId(this.Namespace.intValue(), this.Identifier)).toString();
+		if( "Numeric".equalsIgnoreCase(this._type) ) {
+			return (new NodeId(this.Namespace.intValue(), Integer.valueOf(this.Identifier))).toParseableString();
+		}
+		
+		return (new NodeId(this.Namespace.intValue(), this.Identifier)).toParseableString();
 		// END USER CODE
 	}
 

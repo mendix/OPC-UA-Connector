@@ -115,6 +115,12 @@ public class Microflows
 		params.put("IteratorSubscription", _iteratorSubscription == null ? null : _iteratorSubscription.getMendixObject());
 		Core.microflowCall("OpcUaClientMx.ReinitialzeSubscription").withParams(params).execute(context);
 	}
+	public static boolean save_OpcUaServer(IContext context, opcuaclientmx.proxies.OpcUaServerCfg _opcUaServer)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		params.put("OpcUaServer", _opcUaServer == null ? null : _opcUaServer.getMendixObject());
+		return (java.lang.Boolean) Core.microflowCall("OpcUaClientMx.Save_OpcUaServer").withParams(params).execute(context);
+	}
 	public static void subscriptionIncomingData_Process_TEST(IContext context, java.lang.String _payload, java.lang.String _subscriptionID, java.lang.String _monitoredItemID)
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();

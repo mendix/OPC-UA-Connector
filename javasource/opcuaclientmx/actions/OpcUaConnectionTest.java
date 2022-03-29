@@ -35,7 +35,7 @@ public class OpcUaConnectionTest extends CustomJavaAction<java.lang.Void>
 		
 		OpcUaClient client = OpcUaClientManager.retrieve(context(), this.OpcUaServerCfg);
 		
-		client.disconnect().get(); //Disconnect since we don't want to keep the connection
+		OpcUaClientManager.disconnect(this.OpcUaServerCfg); //Disconnect since we don't want to keep the connection
 		
 		return null;
 		// END USER CODE
