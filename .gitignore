@@ -10,3 +10,19 @@ deployment
 .svn/
 .mendix-cache/
 GPUCache/
+/*.launch
+/deployment/
+/packages/
+/releases/
+/.mendix-cache/
+/.classpath
+/.project
+/opc ua connector.mpr.bak
+/opc ua connector.mpr.lock
+/modeler-merge-marker
+/project-settings.user.json
+/javasource/*/proxies/
+/javasource/system/
+/**/node_modules/
+!/javascriptsource/**/node_modules/
+/nativemobile/builds/
