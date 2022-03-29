@@ -14,6 +14,7 @@ public class UserActionsRegistrar
     registrator.registerUserAction(encryption.actions.PGPEncryptDocument.class);
     registrator.registerUserAction(encryption.actions.ValidatePrivateKeyRing.class);
     registrator.registerUserAction(opcuaclientmx.actions.OpcUaBrowse.class);
+    registrator.registerUserAction(opcuaclientmx.actions.OpcUaBuildNodeId.class);
     registrator.registerUserAction(opcuaclientmx.actions.OpcUaConnectionTest.class);
     registrator.registerUserAction(opcuaclientmx.actions.OpcUaRead.class);
     registrator.registerUserAction(opcuaclientmx.actions.OpcUaRefreshSubscription.class);
