@@ -12,7 +12,6 @@ deployment
 GPUCache/
 /*.launch
 /deployment/
-/packages/
 /releases/
 /.mendix-cache/
 /.classpath
@@ -26,3 +25,4 @@ GPUCache/
 /**/node_modules/
 !/javascriptsource/**/node_modules/
 /nativemobile/builds/
+/packages/
