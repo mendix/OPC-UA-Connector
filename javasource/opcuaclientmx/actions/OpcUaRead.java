@@ -13,6 +13,7 @@ import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
+import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 import com.mendix.core.Core;
 import com.mendix.core.CoreException;
@@ -41,27 +42,44 @@ public class OpcUaRead extends CustomJavaAction<java.lang.String>
 		this.OpcUaServerCfg = __OpcUaServerCfg == null ? null : opcuaclientmx.proxies.OpcUaServerCfg.initialize(getContext(), __OpcUaServerCfg);
 
 		// BEGIN USER CODE
-
 		OpcUaClient client = OpcUaClientManager.retrieve(this.context(), this.OpcUaServerCfg);
-
 		logger.trace(String.format("[Read] Reading from [Server:%s|NodeId:%s]",this.OpcUaServerCfg.getServerID(),this.nodeId) );
+
+		NodeId requestedData;
+		try {
+			requestedData = NodeId.parse(this.nodeId);
+		} catch (Exception e) {
+			throw new CoreException("Unable to connect to the node, is your NodeId accurate?",e);
+		}
 		
-		NodeId requestedData = NodeId.parse(this.nodeId);
-		DataValue response = client.readValue(0, TimestampsToReturn.Both, requestedData).get();
+		DataValue response;
+		try {
+			response = client.readValue(0, TimestampsToReturn.Both, requestedData).get();
+		} catch (Exception e) {
+			throw new CoreException("Unable to read the value from node: " + this.nodeId,e);
+		}
+		
 
 		if( logger.isTraceEnabled())
 			logger.trace(String.format("[Read] Response from [Server:%s|NodeId:%s]; Response data: \"%s;\"",this.OpcUaServerCfg.getServerID(),this.nodeId,response.toString()) );
 
-		if ( response.getStatusCode() == StatusCode.GOOD )
-			return response.getValue().getValue().toString();
-				// logic
+		if ( response.getStatusCode() == StatusCode.GOOD ) {
+			Variant val = response.getValue();
+
+			if( logger.isTraceEnabled())
+				logger.trace(String.format("[Read] Response from [Server:%s|NodeId:%s]; Data Type: \"%s;\"",this.OpcUaServerCfg.getServerID(),this.nodeId,val.getDataType()) );
+			Object varVal = val.getValue();
+			if( varVal != null ) 
+				return varVal.toString();
+			else 
+				return null;
+		}
 		else {
 			String status = response.getStatusCode().toString();
 			String responseStr = "(none)";
 			try { responseStr = response.getValue().getValue().toString(); } catch(Exception e) {}; //We don't care about this error, we want the response if it's there but doesn't matter if it's blank
 		
 			throw new CoreException(String.format("Error Reading from [Server:%s|NodeId:%s]; Status: \"%s;\" Response: \"%s\"",this.OpcUaServerCfg.getServerID(),this.nodeId,status,responseStr));
-
 		}
 
 		// END USER CODE
