@@ -156,12 +156,18 @@ public class OpcUaClientManager {
 
 	private static OpcUaClientConfigBuilder buildOpcUaCfg(List<EndpointDescription> endpoints,  
 			OpcUaServerCfg connector,   IContext context ) throws CoreException  {
+		OpcUaClientKeyStoreLoader loader = new OpcUaClientKeyStoreLoader().load();
 		
 		OpcUaClientConfigBuilder cfg = new OpcUaClientConfigBuilder()
 				.setApplicationName(LocalizedText.english(Constants.getUA_ApplicationName()))
 				.setApplicationUri(Constants.getUA_ApplicationURI())
 				.setEndpoint(endpoints.get(0)) //filter endpoint based on security policy
-			
+				
+				.setKeyPair(loader.getClientKeyPair())
+                .setCertificate(loader.getClientCertificate())
+                .setCertificateChain(loader.getClientCertificateChain())
+//                .setCertificateValidator(certificateValidator)
+                
 				.setRequestTimeout(uint(5000)) //Set timeout to what fits you.
 				.setSessionTimeout(UInteger.valueOf(60000)); //Set timeout to what fits you.	
 				//Standard configuration for all situations.
@@ -200,7 +206,7 @@ public class OpcUaClientManager {
 			List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(connector.getURL()).get();
 			Integer endpcounter = -1;
 			for (EndpointDescription endp : endpoints) {
-				endp.getSecurityMode().toString();
+				logger.debug( "Found Security mode: " + endp.getSecurityMode().toString() + " | URL: " + connector.getURL() );
 				endpcounter++;
 			}
 					

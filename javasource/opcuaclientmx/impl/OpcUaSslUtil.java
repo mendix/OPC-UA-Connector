@@ -32,7 +32,6 @@ public class OpcUaSslUtil {
 			KeyStore keyStore = KeyStore.getInstance("PKCS12");
 			
 			InputStream inp = Core.getFileDocumentContent(context, serverCfg.getMendixObject());
-			
 			keyStore.load(inp, keyPassword);
 
 			//If a certificate contains more aliases, fetch the correct one.
