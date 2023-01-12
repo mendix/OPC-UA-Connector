@@ -69,8 +69,6 @@ Only one of the options can be in use at a time. Which option to use is determin
 
 Follow the instructions in [How to Use Marketplace Content in Studio Pro](/appstore/general/app-store-content/) to import the [OPC UA Client connector](https://marketplace.mendix.com/link/component/117391/) module into your app. You will see the new module in the **Marketplace modules** section of the **App Explorer**. When you edit a microflow, you will also see five additional actions in the **Toolbox**.
 
-{{< figure src="/attachments/appstore/connectors/opc-ua/opc-ua-toolbox.png" alt="OPC UA Client connector actions in the microflow toolbox" >}}
-
 ## 3 Configuration
 
 1. Add the **OpcUaServer_Overview** page to the navigation of the app, either through the **Navigation** settings, or by adding an **Open Page** button to a page which is already in the navigation (for example the home page). 
@@ -96,8 +94,6 @@ For an example of the implementation, install the [sample module](https://market
 ### 4.1 Client State
 
 This connector is designed for usage with multiple Servers if necessary. The state for each OPC UA Server is kept by the Client in an object of the entity **OpcUaServerCfg**. This needs to be populated before the actions of the OPC UA Client connector can be used. 
-
-{{< figure src="/attachments/appstore/connectors/opc-ua/opcuaservercfg.png" alt="OPC UA Server configuration entity" width="300" >}}
 
 For each OPC UA Server, the following information will need to be stored in an **OpcUaServerCfg** object:
 
@@ -126,8 +122,6 @@ Once you have set up the Server configuration, you can perform the following act
 
 The **Browse** action allows you to browse the nodes within the OPC UA Server. The **Browse** function starts at the specified node, browses down and returns the children of the specified node. 
 
-{{< figure src="/attachments/appstore/connectors/opc-ua/browse-action.png" alt="Parameters for the browse action" >}}
-
 * **Opc UA Server cfg** – an object of the entity type **OpcUaServerCfg**, which contains the configuration of the Server to which the request is made
 * **Node id** – the node ID from which you want to browse to its children
 
@@ -143,8 +137,6 @@ The **Browse** action allows you to browse the nodes within the OPC UA Server. T
 #### 4.2.2 Reading the Value of a Node {#read}
 
 The **Read** action allows you to read the current value of a specific node within the OPC UA Server. The output of the action is a String formatted value of the Node. While the module supports most OPC UA attribute types, the action always returns the value as a String as shown in the original message received from the OPC UA Server. Example the decimal value 10.59 will be returned as '10.59'   
-
-{{< figure src="/attachments/appstore/connectors/opc-ua/read-action.png" alt="Parameters for the read action" >}}
 
 * **Opc ua Server cfg** – an object of entity type **OpcUaServerCfg**, which contains the configuration of the Server to which the request is made
 * **Node id** – the ID of the node you want to read
@@ -206,8 +198,6 @@ Each subscription requires a microflow to process the data each time a notificat
 
 The configuration of the action is as follows:
 
-{{< figure src="/attachments/appstore/connectors/opc-ua/subscribe-action.png" alt="Parameters for the subscribe action" >}}
-
 * **Opc ua Server cfg** – an object of entity type **OpcUaServerCfg** containing the configuration of the Server to which the request is made
 * **Node id** – the ID of the node you want to subscribe to
 
@@ -230,8 +220,6 @@ The configuration of the action is as follows:
 
 Information about nodes which are subscribed to is stored in the **MonitoredItem** entity associated with the **OpcUaServerCfg** Server configuration and the **Subscription** entity.  
 
-{{< figure src="/attachments/appstore/connectors/opc-ua/monitoreditem.png" alt="The subscription entity" width="300" >}}
-
 An object is created for each node you request to monitor, and contains the following information:
 
 * **NodeId** (String) – the full node ID as referenced by the OPC UA Server.  
@@ -248,8 +236,6 @@ Information about unique subscriptions that are active with the OPC UA Server. T
 
 The subscription reflects the connection configuration with the OPC UA Server. 
 
-{{< figure src="/attachments/appstore/connectors/opc-ua/subscription.png" alt="The subscription entity" width="300" >}}
-
 This is the only object from the OpcUaClientMx domain that you should create from a microflow, you can create, change, and commit this before passing it into the **Subscribe** action. If you choose to leave the parameter empty, then an object is created automatically for each node you request to monitor. The entity contains the following information:
 
 * **RequestedPublishingInterval_ms** (Decimal) – the publishing interval that is requested from the OPC UA Server in milliseconds (using decimal here to honor the Eclipse Milo implementation)
@@ -264,8 +250,6 @@ The **Unsubscribe** action allows you to end a subscription to item change notif
 
 You can configure if the unsubscribe is permanent (and records are removed) or if the subscription information is kept for restart through the parameters.
 
-{{< figure src="/attachments/appstore/connectors/opc-ua/unsubscribe-action.png" alt="Parameters for the unsubscribe action" >}}
-
 * **Opc ua Server cfg** – an object of entity type **OpcUaServerCfg** containing the configuration of the Server to which the request is made
 * **Monitored item ID** – the ID of the item which is being monitored by the subscription — this is held as the **MonitoredItemID** in the **Subscription** entity
 * **RestartSubscriptionOnNextReboot** – Indicates if the registration entities should be kept by this action
@@ -276,8 +260,6 @@ You can configure if the unsubscribe is permanent (and records are removed) or i
 
 The **Write** action allows you to write a new value to a node to which you have write permissions.
 If nothing is returned, the action was successful; and if the OPC UA Server refuses the value, an exception will be thrown with the full JSON response included in the exception message. 
-
-{{< figure src="/attachments/appstore/connectors/opc-ua/write-action.png" alt="Parameters for the write action" >}}
 
 * **Opc ua Server cfg** – an object of entity type **OpcUaServerCfg** that contains the configuration of the Server to which the request is made
 
