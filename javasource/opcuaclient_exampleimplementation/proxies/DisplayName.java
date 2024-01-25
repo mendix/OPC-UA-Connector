@@ -23,7 +23,7 @@ public class DisplayName
 		Text("Text"),
 		DisplayName_OpcUaNode("OpcUaClient_ExampleImplementation.DisplayName_OpcUaNode");
 
-		private java.lang.String metaName;
+		private final java.lang.String metaName;
 
 		MemberNames(java.lang.String s)
 		{
@@ -39,15 +39,17 @@ public class DisplayName
 
 	public DisplayName(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		this(context, com.mendix.core.Core.instantiate(context, "OpcUaClient_ExampleImplementation.DisplayName"));
+		this(context, com.mendix.core.Core.instantiate(context, entityName));
 	}
 
 	protected DisplayName(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject displayNameMendixObject)
 	{
-		if (displayNameMendixObject == null)
+		if (displayNameMendixObject == null) {
 			throw new java.lang.IllegalArgumentException("The given object cannot be null.");
-		if (!com.mendix.core.Core.isSubClassOf("OpcUaClient_ExampleImplementation.DisplayName", displayNameMendixObject.getType()))
-			throw new java.lang.IllegalArgumentException("The given object is not a OpcUaClient_ExampleImplementation.DisplayName");
+		}
+		if (!com.mendix.core.Core.isSubClassOf(entityName, displayNameMendixObject.getType())) {
+			throw new java.lang.IllegalArgumentException(String.format("The given object is not a %s", entityName));
+		}	
 
 		this.displayNameMendixObject = displayNameMendixObject;
 		this.context = context;
@@ -65,6 +67,9 @@ public class DisplayName
 	/**
 	 * Initialize a proxy using context (recommended). This context will be used for security checking when the get- and set-methods without context parameters are called.
 	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.createSudoClone() can be used to obtain sudo access).
+	 * @param context The context to be used
+	 * @param mendixObject The Mendix object for the new instance
+	 * @return a new instance of this proxy class
 	 */
 	public static opcuaclient_exampleimplementation.proxies.DisplayName initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
@@ -79,14 +84,16 @@ public class DisplayName
 
 	public static java.util.List<opcuaclient_exampleimplementation.proxies.DisplayName> load(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String xpathConstraint) throws com.mendix.core.CoreException
 	{
-		java.util.List<opcuaclient_exampleimplementation.proxies.DisplayName> result = new java.util.ArrayList<opcuaclient_exampleimplementation.proxies.DisplayName>();
-		for (com.mendix.systemwideinterfaces.core.IMendixObject obj : com.mendix.core.Core.retrieveXPathQuery(context, "//OpcUaClient_ExampleImplementation.DisplayName" + xpathConstraint))
-			result.add(opcuaclient_exampleimplementation.proxies.DisplayName.initialize(context, obj));
-		return result;
+		return com.mendix.core.Core.createXPathQuery(String.format("//%1$s%2$s", entityName, xpathConstraint))
+			.execute(context)
+			.stream()
+			.map(obj -> opcuaclient_exampleimplementation.proxies.DisplayName.initialize(context, obj))
+			.collect(java.util.stream.Collectors.toList());
 	}
 
 	/**
 	 * Commit the changes made on this proxy object.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit() throws com.mendix.core.CoreException
 	{
@@ -95,6 +102,7 @@ public class DisplayName
 
 	/**
 	 * Commit the changes made on this proxy object using the specified context.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
@@ -153,6 +161,7 @@ public class DisplayName
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of DisplayName_OpcUaNode
 	 */
 	public final opcuaclient_exampleimplementation.proxies.OpcUaNode getDisplayName_OpcUaNode() throws com.mendix.core.CoreException
@@ -163,13 +172,15 @@ public class DisplayName
 	/**
 	 * @param context
 	 * @return value of DisplayName_OpcUaNode
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final opcuaclient_exampleimplementation.proxies.OpcUaNode getDisplayName_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		opcuaclient_exampleimplementation.proxies.OpcUaNode result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.DisplayName_OpcUaNode.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = opcuaclient_exampleimplementation.proxies.OpcUaNode.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -189,10 +200,11 @@ public class DisplayName
 	 */
 	public final void setDisplayName_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context, opcuaclient_exampleimplementation.proxies.OpcUaNode displayname_opcuanode)
 	{
-		if (displayname_opcuanode == null)
+		if (displayname_opcuanode == null) {
 			getMendixObject().setValue(context, MemberNames.DisplayName_OpcUaNode.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.DisplayName_OpcUaNode.toString(), displayname_opcuanode.getMendixObject().getId());
+		}
 	}
 
 	/**
@@ -214,9 +226,9 @@ public class DisplayName
 	@java.lang.Override
 	public boolean equals(Object obj)
 	{
-		if (obj == this)
+		if (obj == this) {
 			return true;
-
+		}
 		if (obj != null && getClass().equals(obj.getClass()))
 		{
 			final opcuaclient_exampleimplementation.proxies.DisplayName that = (opcuaclient_exampleimplementation.proxies.DisplayName) obj;
@@ -236,7 +248,7 @@ public class DisplayName
 	 */
 	public static java.lang.String getType()
 	{
-		return "OpcUaClient_ExampleImplementation.DisplayName";
+		return entityName;
 	}
 
 	/**

@@ -12,6 +12,7 @@ import java.util.function.BiConsumer;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
+import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription.ItemCreationCallback;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.ExtensionObject;
@@ -73,7 +74,7 @@ public class SubscriptionManager
 	public IMendixObject addSubscription(IContext context, OpcUaServerCfg opcUaServerCfg, Subscription subscriptionObject, String nodeId, String onMessageMicroflow) throws CoreException {
 		OpcUaClient client = OpcUaClientManager.retrieve(context, opcUaServerCfg);
 		
-		//Setup the Subscription & Monitored Item in the OPC clien
+		//Setup the Subscription & Monitored Item in the OPC client
 		UaSubscription subscription = findOrCreateSubscription(opcUaServerCfg, client, opcUaServerCfg.getServerID(), subscriptionObject, context);
 		List<UaMonitoredItem> itemList =  SubscriptionManager._getInstance().createSubscriptionListener(subscription, NodeId.parse(nodeId), onMessageMicroflow, opcUaServerCfg, context);
 		
@@ -129,9 +130,9 @@ public class SubscriptionManager
 		MonitoredItemCreateRequest request = new MonitoredItemCreateRequest(readValueId, MonitoringMode.Reporting, parameters);
 
 		
-		BiConsumer<UaMonitoredItem, DataValue> consumer = createConsumerFunction(OnMessageMicroflow, serverID, subscriptionID);
+		UaMonitoredItem.ValueConsumer consumer = createConsumerFunction(OnMessageMicroflow, serverID, subscriptionID);
 		// setting the consumer after the subscription creation
-		BiConsumer<UaMonitoredItem, Integer> onItemCreated = (monitoredItem, id) -> monitoredItem.setValueConsumer(consumer);
+		UaSubscription.ItemCreationCallback onItemCreated = (monitoredItem, id) -> monitoredItem.setValueConsumer(consumer);    
 		
 		List<UaMonitoredItem> items;
 		try {
@@ -227,7 +228,7 @@ public class SubscriptionManager
 	
 	
 	
-	private static BiConsumer<UaMonitoredItem, DataValue> createConsumerFunction(String OnMessageMicroflow, String serverID, String SubscriptionID) {
+	private static UaMonitoredItem.ValueConsumer createConsumerFunction(String OnMessageMicroflow, String serverID, String SubscriptionID) {
 		
 		boolean simpleMicroflow = true, hasPayloadParam = false;
 		String msgParamName = null;

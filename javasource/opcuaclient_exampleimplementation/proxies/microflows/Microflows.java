@@ -7,26 +7,31 @@ package opcuaclient_exampleimplementation.proxies.microflows;
 import java.util.HashMap;
 import java.util.Map;
 import com.mendix.core.Core;
-import com.mendix.core.CoreException;
-import com.mendix.systemwideinterfaces.MendixRuntimeException;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.systemwideinterfaces.core.IMendixObject;
 
 public class Microflows
 {
+	/**
+	 * @deprecated
+	 * The default constructor of the Microflows class should not be used.
+	 * Use the static microflow invocation methods instead.
+	 */
+	@java.lang.Deprecated(since = "9.12", forRemoval = true)
+	public Microflows() {}
+
 	// These are the microflows for the OpcUaClient_ExampleImplementation module
 	public static java.util.List<opcuaclient_exampleimplementation.proxies.GatePLC> dS_GetGate(IContext context)
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();
 		java.util.List<IMendixObject> objs = Core.microflowCall("OpcUaClient_ExampleImplementation.DS_GetGate").withParams(params).execute(context);
-		java.util.List<opcuaclient_exampleimplementation.proxies.GatePLC> result = null;
-		if (objs != null)
-		{
-			result = new java.util.ArrayList<>();
-			for (IMendixObject obj : objs)
-				result.add(opcuaclient_exampleimplementation.proxies.GatePLC.initialize(context, obj));
+		if (objs == null) {
+			return null;
+		} else {
+			return objs.stream()
+				.map(obj -> opcuaclient_exampleimplementation.proxies.GatePLC.initialize(context, obj))
+				.collect(java.util.stream.Collectors.toList());
 		}
-		return result;
 	}
 	public static opcuaclient_exampleimplementation.proxies.Set getOpcUaNodeSet(IContext context, opcuaclientmx.proxies.OpcUaServerCfg _opcUaServerCfg)
 	{
@@ -88,28 +93,26 @@ public class Microflows
 		Map<java.lang.String, Object> params = new HashMap<>();
 		params.put("OpcUaNode", _opcUaNode == null ? null : _opcUaNode.getMendixObject());
 		java.util.List<IMendixObject> objs = Core.microflowCall("OpcUaClient_ExampleImplementation.OpcUaNode_Browse_FromNode").withParams(params).execute(context);
-		java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> result = null;
-		if (objs != null)
-		{
-			result = new java.util.ArrayList<>();
-			for (IMendixObject obj : objs)
-				result.add(opcuaclient_exampleimplementation.proxies.OpcUaNode.initialize(context, obj));
+		if (objs == null) {
+			return null;
+		} else {
+			return objs.stream()
+				.map(obj -> opcuaclient_exampleimplementation.proxies.OpcUaNode.initialize(context, obj))
+				.collect(java.util.stream.Collectors.toList());
 		}
-		return result;
 	}
 	public static java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> opcUaNode_Browse_FromSet(IContext context, opcuaclient_exampleimplementation.proxies.OpcUaNode _opcUaNode)
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();
 		params.put("OpcUaNode", _opcUaNode == null ? null : _opcUaNode.getMendixObject());
 		java.util.List<IMendixObject> objs = Core.microflowCall("OpcUaClient_ExampleImplementation.OpcUaNode_Browse_FromSet").withParams(params).execute(context);
-		java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> result = null;
-		if (objs != null)
-		{
-			result = new java.util.ArrayList<>();
-			for (IMendixObject obj : objs)
-				result.add(opcuaclient_exampleimplementation.proxies.OpcUaNode.initialize(context, obj));
+		if (objs == null) {
+			return null;
+		} else {
+			return objs.stream()
+				.map(obj -> opcuaclient_exampleimplementation.proxies.OpcUaNode.initialize(context, obj))
+				.collect(java.util.stream.Collectors.toList());
 		}
-		return result;
 	}
 	public static void opcUaNode_Browse_TopLevel(IContext context, opcuaclientmx.proxies.OpcUaServerCfg _opcUaServer)
 	{
@@ -134,14 +137,13 @@ public class Microflows
 		Map<java.lang.String, Object> params = new HashMap<>();
 		params.put("OpcUaServerCfg", _opcUaServerCfg == null ? null : _opcUaServerCfg.getMendixObject());
 		java.util.List<IMendixObject> objs = Core.microflowCall("OpcUaClient_ExampleImplementation.OpcUaNode_GetForNodeView").withParams(params).execute(context);
-		java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> result = null;
-		if (objs != null)
-		{
-			result = new java.util.ArrayList<>();
-			for (IMendixObject obj : objs)
-				result.add(opcuaclient_exampleimplementation.proxies.OpcUaNode.initialize(context, obj));
+		if (objs == null) {
+			return null;
+		} else {
+			return objs.stream()
+				.map(obj -> opcuaclient_exampleimplementation.proxies.OpcUaNode.initialize(context, obj))
+				.collect(java.util.stream.Collectors.toList());
 		}
-		return result;
 	}
 	public static void opcUaNode_Read(IContext context, opcuaclient_exampleimplementation.proxies.OpcUaNode _opcUaNode)
 	{
@@ -176,14 +178,13 @@ public class Microflows
 		params.put("ParentOpcUaNode", _parentOpcUaNode == null ? null : _parentOpcUaNode.getMendixObject());
 		params.put("OpcUaServer", _opcUaServer == null ? null : _opcUaServer.getMendixObject());
 		java.util.List<IMendixObject> objs = Core.microflowCall("OpcUaClient_ExampleImplementation.ProcessOpcUaNodeList").withParams(params).execute(context);
-		java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> result = null;
-		if (objs != null)
-		{
-			result = new java.util.ArrayList<>();
-			for (IMendixObject obj : objs)
-				result.add(opcuaclient_exampleimplementation.proxies.OpcUaNode.initialize(context, obj));
+		if (objs == null) {
+			return null;
+		} else {
+			return objs.stream()
+				.map(obj -> opcuaclient_exampleimplementation.proxies.OpcUaNode.initialize(context, obj))
+				.collect(java.util.stream.Collectors.toList());
 		}
-		return result;
 	}
 	public static void uA_ProcessEvent_GateDown(IContext context, opcuaclientmx.proxies.Message _message)
 	{

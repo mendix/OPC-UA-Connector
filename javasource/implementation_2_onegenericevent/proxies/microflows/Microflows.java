@@ -7,26 +7,31 @@ package implementation_2_onegenericevent.proxies.microflows;
 import java.util.HashMap;
 import java.util.Map;
 import com.mendix.core.Core;
-import com.mendix.core.CoreException;
-import com.mendix.systemwideinterfaces.MendixRuntimeException;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.systemwideinterfaces.core.IMendixObject;
 
 public class Microflows
 {
+	/**
+	 * @deprecated
+	 * The default constructor of the Microflows class should not be used.
+	 * Use the static microflow invocation methods instead.
+	 */
+	@java.lang.Deprecated(since = "9.12", forRemoval = true)
+	public Microflows() {}
+
 	// These are the microflows for the Implementation_2_OneGenericEvent module
 	public static java.util.List<implementation_2_onegenericevent.proxies.GatePLC> dS_GetGate(IContext context)
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();
 		java.util.List<IMendixObject> objs = Core.microflowCall("Implementation_2_OneGenericEvent.DS_GetGate").withParams(params).execute(context);
-		java.util.List<implementation_2_onegenericevent.proxies.GatePLC> result = null;
-		if (objs != null)
-		{
-			result = new java.util.ArrayList<>();
-			for (IMendixObject obj : objs)
-				result.add(implementation_2_onegenericevent.proxies.GatePLC.initialize(context, obj));
+		if (objs == null) {
+			return null;
+		} else {
+			return objs.stream()
+				.map(obj -> implementation_2_onegenericevent.proxies.GatePLC.initialize(context, obj))
+				.collect(java.util.stream.Collectors.toList());
 		}
-		return result;
 	}
 	public static void mB_CloseGate(IContext context, implementation_2_onegenericevent.proxies.GatePLC _gatePLC)
 	{

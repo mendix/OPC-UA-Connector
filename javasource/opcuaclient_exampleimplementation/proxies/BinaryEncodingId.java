@@ -32,7 +32,7 @@ public class BinaryEncodingId
 		Local("Local"),
 		BinaryEncodingId_OpcUaNode("OpcUaClient_ExampleImplementation.BinaryEncodingId_OpcUaNode");
 
-		private java.lang.String metaName;
+		private final java.lang.String metaName;
 
 		MemberNames(java.lang.String s)
 		{
@@ -48,15 +48,17 @@ public class BinaryEncodingId
 
 	public BinaryEncodingId(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		this(context, com.mendix.core.Core.instantiate(context, "OpcUaClient_ExampleImplementation.BinaryEncodingId"));
+		this(context, com.mendix.core.Core.instantiate(context, entityName));
 	}
 
 	protected BinaryEncodingId(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject binaryEncodingIdMendixObject)
 	{
-		if (binaryEncodingIdMendixObject == null)
+		if (binaryEncodingIdMendixObject == null) {
 			throw new java.lang.IllegalArgumentException("The given object cannot be null.");
-		if (!com.mendix.core.Core.isSubClassOf("OpcUaClient_ExampleImplementation.BinaryEncodingId", binaryEncodingIdMendixObject.getType()))
-			throw new java.lang.IllegalArgumentException("The given object is not a OpcUaClient_ExampleImplementation.BinaryEncodingId");
+		}
+		if (!com.mendix.core.Core.isSubClassOf(entityName, binaryEncodingIdMendixObject.getType())) {
+			throw new java.lang.IllegalArgumentException(String.format("The given object is not a %s", entityName));
+		}	
 
 		this.binaryEncodingIdMendixObject = binaryEncodingIdMendixObject;
 		this.context = context;
@@ -74,6 +76,9 @@ public class BinaryEncodingId
 	/**
 	 * Initialize a proxy using context (recommended). This context will be used for security checking when the get- and set-methods without context parameters are called.
 	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.createSudoClone() can be used to obtain sudo access).
+	 * @param context The context to be used
+	 * @param mendixObject The Mendix object for the new instance
+	 * @return a new instance of this proxy class
 	 */
 	public static opcuaclient_exampleimplementation.proxies.BinaryEncodingId initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
@@ -88,14 +93,16 @@ public class BinaryEncodingId
 
 	public static java.util.List<opcuaclient_exampleimplementation.proxies.BinaryEncodingId> load(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String xpathConstraint) throws com.mendix.core.CoreException
 	{
-		java.util.List<opcuaclient_exampleimplementation.proxies.BinaryEncodingId> result = new java.util.ArrayList<opcuaclient_exampleimplementation.proxies.BinaryEncodingId>();
-		for (com.mendix.systemwideinterfaces.core.IMendixObject obj : com.mendix.core.Core.retrieveXPathQuery(context, "//OpcUaClient_ExampleImplementation.BinaryEncodingId" + xpathConstraint))
-			result.add(opcuaclient_exampleimplementation.proxies.BinaryEncodingId.initialize(context, obj));
-		return result;
+		return com.mendix.core.Core.createXPathQuery(String.format("//%1$s%2$s", entityName, xpathConstraint))
+			.execute(context)
+			.stream()
+			.map(obj -> opcuaclient_exampleimplementation.proxies.BinaryEncodingId.initialize(context, obj))
+			.collect(java.util.stream.Collectors.toList());
 	}
 
 	/**
 	 * Commit the changes made on this proxy object.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit() throws com.mendix.core.CoreException
 	{
@@ -104,6 +111,7 @@ public class BinaryEncodingId
 
 	/**
 	 * Commit the changes made on this proxy object using the specified context.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
@@ -486,6 +494,7 @@ public class BinaryEncodingId
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of BinaryEncodingId_OpcUaNode
 	 */
 	public final opcuaclient_exampleimplementation.proxies.OpcUaNode getBinaryEncodingId_OpcUaNode() throws com.mendix.core.CoreException
@@ -496,13 +505,15 @@ public class BinaryEncodingId
 	/**
 	 * @param context
 	 * @return value of BinaryEncodingId_OpcUaNode
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final opcuaclient_exampleimplementation.proxies.OpcUaNode getBinaryEncodingId_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		opcuaclient_exampleimplementation.proxies.OpcUaNode result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.BinaryEncodingId_OpcUaNode.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = opcuaclient_exampleimplementation.proxies.OpcUaNode.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -522,10 +533,11 @@ public class BinaryEncodingId
 	 */
 	public final void setBinaryEncodingId_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context, opcuaclient_exampleimplementation.proxies.OpcUaNode binaryencodingid_opcuanode)
 	{
-		if (binaryencodingid_opcuanode == null)
+		if (binaryencodingid_opcuanode == null) {
 			getMendixObject().setValue(context, MemberNames.BinaryEncodingId_OpcUaNode.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.BinaryEncodingId_OpcUaNode.toString(), binaryencodingid_opcuanode.getMendixObject().getId());
+		}
 	}
 
 	/**
@@ -547,9 +559,9 @@ public class BinaryEncodingId
 	@java.lang.Override
 	public boolean equals(Object obj)
 	{
-		if (obj == this)
+		if (obj == this) {
 			return true;
-
+		}
 		if (obj != null && getClass().equals(obj.getClass()))
 		{
 			final opcuaclient_exampleimplementation.proxies.BinaryEncodingId that = (opcuaclient_exampleimplementation.proxies.BinaryEncodingId) obj;
@@ -569,7 +581,7 @@ public class BinaryEncodingId
 	 */
 	public static java.lang.String getType()
 	{
-		return "OpcUaClient_ExampleImplementation.BinaryEncodingId";
+		return entityName;
 	}
 
 	/**

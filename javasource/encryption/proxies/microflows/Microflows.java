@@ -7,13 +7,19 @@ package encryption.proxies.microflows;
 import java.util.HashMap;
 import java.util.Map;
 import com.mendix.core.Core;
-import com.mendix.core.CoreException;
-import com.mendix.systemwideinterfaces.MendixRuntimeException;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.systemwideinterfaces.core.IMendixObject;
 
 public class Microflows
 {
+	/**
+	 * @deprecated
+	 * The default constructor of the Microflows class should not be used.
+	 * Use the static microflow invocation methods instead.
+	 */
+	@java.lang.Deprecated(since = "9.12", forRemoval = true)
+	public Microflows() {}
+
 	// These are the microflows for the Encryption module
 	public static java.lang.String decrypt(IContext context, java.lang.String _encrypted)
 	{
@@ -29,6 +35,13 @@ public class Microflows
 		params.put("PrivateKeyForDecryption", _privateKeyForDecryption == null ? null : _privateKeyForDecryption.getMendixObject());
 		Core.microflowCall("Encryption.Decrypt_Document").withParams(params).execute(context);
 	}
+	public static java.lang.String decryptCommunityCommonsString(IContext context, java.lang.String _value, java.lang.String _key)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		params.put("Value", _value);
+		params.put("Key", _key);
+		return (java.lang.String) Core.microflowCall("Encryption.DecryptCommunityCommonsString").withParams(params).execute(context);
+	}
 	public static encryption.proxies.PGPCertificate dS_GetAssociatedPubKey(IContext context, encryption.proxies.PGPCertificate _certificate)
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();
@@ -42,14 +55,19 @@ public class Microflows
 		params.put("Plain", _plain);
 		return (java.lang.String) Core.microflowCall("Encryption.Encrypt").withParams(params).execute(context);
 	}
-	public static void encrypt_Document(IContext context, system.proxies.FileDocument _fileDocument_ToEncrypt, system.proxies.FileDocument _fileDocument_Output, encryption.proxies.PGPCertificate _externalPubKey, encryption.proxies.PGPCertificate _signingPrivateKey_Optional)
+	public static void encrypt_Document(IContext context, system.proxies.FileDocument _fileDocument_ToEncrypt, system.proxies.FileDocument _fileDocument_Output, encryption.proxies.PGPCertificate _externalPubKey)
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();
 		params.put("FileDocument_ToEncrypt", _fileDocument_ToEncrypt == null ? null : _fileDocument_ToEncrypt.getMendixObject());
 		params.put("FileDocument_Output", _fileDocument_Output == null ? null : _fileDocument_Output.getMendixObject());
 		params.put("ExternalPubKey", _externalPubKey == null ? null : _externalPubKey.getMendixObject());
-		params.put("SigningPrivateKey_Optional", _signingPrivateKey_Optional == null ? null : _signingPrivateKey_Optional.getMendixObject());
 		Core.microflowCall("Encryption.Encrypt_Document").withParams(params).execute(context);
+	}
+	public static java.lang.String forceEncrypt(IContext context, java.lang.String _plain)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		params.put("Plain", _plain);
+		return (java.lang.String) Core.microflowCall("Encryption.ForceEncrypt").withParams(params).execute(context);
 	}
 	public static void mB_ChangePasswordSave(IContext context, encryption.proxies.PasswordData _passwordData)
 	{
@@ -89,6 +107,12 @@ public class Microflows
 		Map<java.lang.String, Object> params = new HashMap<>();
 		params.put("Certificate", _certificate == null ? null : _certificate.getMendixObject());
 		Core.microflowCall("Encryption.MB_SaveCertificate").withParams(params).execute(context);
+	}
+	public static void mB_SavePassword(IContext context, encryption.proxies.ExampleConfiguration _exampleConfiguration)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		params.put("ExampleConfiguration", _exampleConfiguration == null ? null : _exampleConfiguration.getMendixObject());
+		Core.microflowCall("Encryption.MB_SavePassword").withParams(params).execute(context);
 	}
 	public static void mB_ShowChangePassword(IContext context, encryption.proxies.ExampleConfiguration _exampleConfiguration)
 	{

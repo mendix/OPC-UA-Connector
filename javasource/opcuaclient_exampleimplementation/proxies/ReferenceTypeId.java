@@ -27,7 +27,7 @@ public class ReferenceTypeId
 		NotNull("NotNull"),
 		ReferenceTypeId_OpcUaNode("OpcUaClient_ExampleImplementation.ReferenceTypeId_OpcUaNode");
 
-		private java.lang.String metaName;
+		private final java.lang.String metaName;
 
 		MemberNames(java.lang.String s)
 		{
@@ -43,15 +43,17 @@ public class ReferenceTypeId
 
 	public ReferenceTypeId(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		this(context, com.mendix.core.Core.instantiate(context, "OpcUaClient_ExampleImplementation.ReferenceTypeId"));
+		this(context, com.mendix.core.Core.instantiate(context, entityName));
 	}
 
 	protected ReferenceTypeId(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject referenceTypeIdMendixObject)
 	{
-		if (referenceTypeIdMendixObject == null)
+		if (referenceTypeIdMendixObject == null) {
 			throw new java.lang.IllegalArgumentException("The given object cannot be null.");
-		if (!com.mendix.core.Core.isSubClassOf("OpcUaClient_ExampleImplementation.ReferenceTypeId", referenceTypeIdMendixObject.getType()))
-			throw new java.lang.IllegalArgumentException("The given object is not a OpcUaClient_ExampleImplementation.ReferenceTypeId");
+		}
+		if (!com.mendix.core.Core.isSubClassOf(entityName, referenceTypeIdMendixObject.getType())) {
+			throw new java.lang.IllegalArgumentException(String.format("The given object is not a %s", entityName));
+		}	
 
 		this.referenceTypeIdMendixObject = referenceTypeIdMendixObject;
 		this.context = context;
@@ -69,6 +71,9 @@ public class ReferenceTypeId
 	/**
 	 * Initialize a proxy using context (recommended). This context will be used for security checking when the get- and set-methods without context parameters are called.
 	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.createSudoClone() can be used to obtain sudo access).
+	 * @param context The context to be used
+	 * @param mendixObject The Mendix object for the new instance
+	 * @return a new instance of this proxy class
 	 */
 	public static opcuaclient_exampleimplementation.proxies.ReferenceTypeId initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
@@ -83,14 +88,16 @@ public class ReferenceTypeId
 
 	public static java.util.List<opcuaclient_exampleimplementation.proxies.ReferenceTypeId> load(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String xpathConstraint) throws com.mendix.core.CoreException
 	{
-		java.util.List<opcuaclient_exampleimplementation.proxies.ReferenceTypeId> result = new java.util.ArrayList<opcuaclient_exampleimplementation.proxies.ReferenceTypeId>();
-		for (com.mendix.systemwideinterfaces.core.IMendixObject obj : com.mendix.core.Core.retrieveXPathQuery(context, "//OpcUaClient_ExampleImplementation.ReferenceTypeId" + xpathConstraint))
-			result.add(opcuaclient_exampleimplementation.proxies.ReferenceTypeId.initialize(context, obj));
-		return result;
+		return com.mendix.core.Core.createXPathQuery(String.format("//%1$s%2$s", entityName, xpathConstraint))
+			.execute(context)
+			.stream()
+			.map(obj -> opcuaclient_exampleimplementation.proxies.ReferenceTypeId.initialize(context, obj))
+			.collect(java.util.stream.Collectors.toList());
 	}
 
 	/**
 	 * Commit the changes made on this proxy object.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit() throws com.mendix.core.CoreException
 	{
@@ -99,6 +106,7 @@ public class ReferenceTypeId
 
 	/**
 	 * Commit the changes made on this proxy object using the specified context.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
@@ -301,6 +309,7 @@ public class ReferenceTypeId
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of ReferenceTypeId_OpcUaNode
 	 */
 	public final opcuaclient_exampleimplementation.proxies.OpcUaNode getReferenceTypeId_OpcUaNode() throws com.mendix.core.CoreException
@@ -311,13 +320,15 @@ public class ReferenceTypeId
 	/**
 	 * @param context
 	 * @return value of ReferenceTypeId_OpcUaNode
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final opcuaclient_exampleimplementation.proxies.OpcUaNode getReferenceTypeId_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		opcuaclient_exampleimplementation.proxies.OpcUaNode result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.ReferenceTypeId_OpcUaNode.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = opcuaclient_exampleimplementation.proxies.OpcUaNode.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -337,10 +348,11 @@ public class ReferenceTypeId
 	 */
 	public final void setReferenceTypeId_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context, opcuaclient_exampleimplementation.proxies.OpcUaNode referencetypeid_opcuanode)
 	{
-		if (referencetypeid_opcuanode == null)
+		if (referencetypeid_opcuanode == null) {
 			getMendixObject().setValue(context, MemberNames.ReferenceTypeId_OpcUaNode.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.ReferenceTypeId_OpcUaNode.toString(), referencetypeid_opcuanode.getMendixObject().getId());
+		}
 	}
 
 	/**
@@ -362,9 +374,9 @@ public class ReferenceTypeId
 	@java.lang.Override
 	public boolean equals(Object obj)
 	{
-		if (obj == this)
+		if (obj == this) {
 			return true;
-
+		}
 		if (obj != null && getClass().equals(obj.getClass()))
 		{
 			final opcuaclient_exampleimplementation.proxies.ReferenceTypeId that = (opcuaclient_exampleimplementation.proxies.ReferenceTypeId) obj;
@@ -384,7 +396,7 @@ public class ReferenceTypeId
 	 */
 	public static java.lang.String getType()
 	{
-		return "OpcUaClient_ExampleImplementation.ReferenceTypeId";
+		return entityName;
 	}
 
 	/**

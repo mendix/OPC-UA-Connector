@@ -23,7 +23,7 @@ public class SearchHelper
 		SearchString("SearchString"),
 		SearchHelper_OpcUaNode("OpcUaClient_ExampleImplementation.SearchHelper_OpcUaNode");
 
-		private java.lang.String metaName;
+		private final java.lang.String metaName;
 
 		MemberNames(java.lang.String s)
 		{
@@ -39,15 +39,17 @@ public class SearchHelper
 
 	public SearchHelper(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		this(context, com.mendix.core.Core.instantiate(context, "OpcUaClient_ExampleImplementation.SearchHelper"));
+		this(context, com.mendix.core.Core.instantiate(context, entityName));
 	}
 
 	protected SearchHelper(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject searchHelperMendixObject)
 	{
-		if (searchHelperMendixObject == null)
+		if (searchHelperMendixObject == null) {
 			throw new java.lang.IllegalArgumentException("The given object cannot be null.");
-		if (!com.mendix.core.Core.isSubClassOf("OpcUaClient_ExampleImplementation.SearchHelper", searchHelperMendixObject.getType()))
-			throw new java.lang.IllegalArgumentException("The given object is not a OpcUaClient_ExampleImplementation.SearchHelper");
+		}
+		if (!com.mendix.core.Core.isSubClassOf(entityName, searchHelperMendixObject.getType())) {
+			throw new java.lang.IllegalArgumentException(String.format("The given object is not a %s", entityName));
+		}	
 
 		this.searchHelperMendixObject = searchHelperMendixObject;
 		this.context = context;
@@ -65,6 +67,9 @@ public class SearchHelper
 	/**
 	 * Initialize a proxy using context (recommended). This context will be used for security checking when the get- and set-methods without context parameters are called.
 	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.createSudoClone() can be used to obtain sudo access).
+	 * @param context The context to be used
+	 * @param mendixObject The Mendix object for the new instance
+	 * @return a new instance of this proxy class
 	 */
 	public static opcuaclient_exampleimplementation.proxies.SearchHelper initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
@@ -79,6 +84,7 @@ public class SearchHelper
 
 	/**
 	 * Commit the changes made on this proxy object.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit() throws com.mendix.core.CoreException
 	{
@@ -87,6 +93,7 @@ public class SearchHelper
 
 	/**
 	 * Commit the changes made on this proxy object using the specified context.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
@@ -145,6 +152,7 @@ public class SearchHelper
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of SearchHelper_OpcUaNode
 	 */
 	public final java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> getSearchHelper_OpcUaNode() throws com.mendix.core.CoreException
@@ -155,16 +163,19 @@ public class SearchHelper
 	/**
 	 * @param context
 	 * @return value of SearchHelper_OpcUaNode
+	 * @throws com.mendix.core.CoreException
 	 */
 	@SuppressWarnings("unchecked")
 	public final java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> getSearchHelper_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
-		java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> result = new java.util.ArrayList<opcuaclient_exampleimplementation.proxies.OpcUaNode>();
+		java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> result = new java.util.ArrayList<>();
 		Object valueObject = getMendixObject().getValue(context, MemberNames.SearchHelper_OpcUaNode.toString());
-		if (valueObject == null)
+		if (valueObject == null) {
 			return result;
-		for (com.mendix.systemwideinterfaces.core.IMendixObject mendixObject : com.mendix.core.Core.retrieveIdList(context, (java.util.List<com.mendix.systemwideinterfaces.core.IMendixIdentifier>) valueObject))
+		}
+		for (com.mendix.systemwideinterfaces.core.IMendixObject mendixObject : com.mendix.core.Core.retrieveIdList(context, (java.util.List<com.mendix.systemwideinterfaces.core.IMendixIdentifier>) valueObject)) {
 			result.add(opcuaclient_exampleimplementation.proxies.OpcUaNode.initialize(context, mendixObject));
+		}
 		return result;
 	}
 
@@ -184,9 +195,11 @@ public class SearchHelper
 	 */
 	public final void setSearchHelper_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context, java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> searchhelper_opcuanode)
 	{
-		java.util.List<com.mendix.systemwideinterfaces.core.IMendixIdentifier> identifiers = new java.util.ArrayList<com.mendix.systemwideinterfaces.core.IMendixIdentifier>();
-		for (opcuaclient_exampleimplementation.proxies.OpcUaNode proxyObject : searchhelper_opcuanode)
-			identifiers.add(proxyObject.getMendixObject().getId());
+		var identifiers = searchhelper_opcuanode
+			.stream()
+			.map(proxyObject -> proxyObject.getMendixObject().getId())
+			.collect(java.util.stream.Collectors.toList());
+		
 		getMendixObject().setValue(context, MemberNames.SearchHelper_OpcUaNode.toString(), identifiers);
 	}
 
@@ -209,9 +222,9 @@ public class SearchHelper
 	@java.lang.Override
 	public boolean equals(Object obj)
 	{
-		if (obj == this)
+		if (obj == this) {
 			return true;
-
+		}
 		if (obj != null && getClass().equals(obj.getClass()))
 		{
 			final opcuaclient_exampleimplementation.proxies.SearchHelper that = (opcuaclient_exampleimplementation.proxies.SearchHelper) obj;
@@ -231,7 +244,7 @@ public class SearchHelper
 	 */
 	public static java.lang.String getType()
 	{
-		return "OpcUaClient_ExampleImplementation.SearchHelper";
+		return entityName;
 	}
 
 	/**

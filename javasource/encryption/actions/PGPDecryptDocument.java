@@ -16,8 +16,8 @@ import encryption.pgp.PGPFileProcessor;
 import encryption.proxies.microflows.Microflows;
 
 /**
- * Encrypt the FileDocument using PGP encryption. 
- *  This is allowed to be the same FileDocument instance and the action will just store th decrypted file in the entity.
+ * Encrypt the FileDocument using PGP encryption.
+ * This is allowed to be the same FileDocument instance and the action will just store the decrypted file in the entity.
  * 
  * The certificate must be a File containing a valid PGP key ring (matching the document) and the certificate must have a passphrase entered in the attribute
  * 
@@ -43,11 +43,11 @@ public class PGPDecryptDocument extends CustomJavaAction<java.lang.Boolean>
 	@java.lang.Override
 	public java.lang.Boolean executeAction() throws Exception
 	{
-		this.PrivateDecryptionKey = __PrivateDecryptionKey == null ? null : encryption.proxies.PGPCertificate.initialize(getContext(), __PrivateDecryptionKey);
+		this.PrivateDecryptionKey = this.__PrivateDecryptionKey == null ? null : encryption.proxies.PGPCertificate.initialize(getContext(), __PrivateDecryptionKey);
 
-		this.DocumentToDecrypt = __DocumentToDecrypt == null ? null : system.proxies.FileDocument.initialize(getContext(), __DocumentToDecrypt);
+		this.DocumentToDecrypt = this.__DocumentToDecrypt == null ? null : system.proxies.FileDocument.initialize(getContext(), __DocumentToDecrypt);
 
-		this.OutputDocument = __OutputDocument == null ? null : system.proxies.FileDocument.initialize(getContext(), __OutputDocument);
+		this.OutputDocument = this.__OutputDocument == null ? null : system.proxies.FileDocument.initialize(getContext(), __OutputDocument);
 
 		// BEGIN USER CODE
 		PGPFileProcessor p = new PGPFileProcessor();
@@ -64,6 +64,7 @@ public class PGPDecryptDocument extends CustomJavaAction<java.lang.Boolean>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()
