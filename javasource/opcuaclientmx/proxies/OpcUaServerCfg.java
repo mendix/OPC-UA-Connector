@@ -24,6 +24,7 @@ public class OpcUaServerCfg extends system.proxies.FileDocument
 		AuthenticationType("AuthenticationType"),
 		CertificatePassword("CertificatePassword"),
 		CertifcatePassword_Encrypted("CertifcatePassword_Encrypted"),
+		SecurityPolicy("SecurityPolicy"),
 		FileID("FileID"),
 		Name("Name"),
 		DeleteAfterDownload("DeleteAfterDownload"),
@@ -389,6 +390,51 @@ public class OpcUaServerCfg extends system.proxies.FileDocument
 	public final void setCertifcatePassword_Encrypted(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String certifcatepassword_encrypted)
 	{
 		getMendixObject().setValue(context, MemberNames.CertifcatePassword_Encrypted.toString(), certifcatepassword_encrypted);
+	}
+
+	/**
+	 * Set value of SecurityPolicy
+	 * @param securitypolicy
+	 */
+	public final opcuaclientmx.proxies.SecurityPolicy getSecurityPolicy()
+	{
+		return getSecurityPolicy(getContext());
+	}
+
+	/**
+	 * @param context
+	 * @return value of SecurityPolicy
+	 */
+	public final opcuaclientmx.proxies.SecurityPolicy getSecurityPolicy(com.mendix.systemwideinterfaces.core.IContext context)
+	{
+		Object obj = getMendixObject().getValue(context, MemberNames.SecurityPolicy.toString());
+		if (obj == null) {
+			return null;
+		}
+		return opcuaclientmx.proxies.SecurityPolicy.valueOf((java.lang.String) obj);
+	}
+
+	/**
+	 * Set value of SecurityPolicy
+	 * @param securitypolicy
+	 */
+	public final void setSecurityPolicy(opcuaclientmx.proxies.SecurityPolicy securitypolicy)
+	{
+		setSecurityPolicy(getContext(), securitypolicy);
+	}
+
+	/**
+	 * Set value of SecurityPolicy
+	 * @param context
+	 * @param securitypolicy
+	 */
+	public final void setSecurityPolicy(com.mendix.systemwideinterfaces.core.IContext context, opcuaclientmx.proxies.SecurityPolicy securitypolicy)
+	{
+		if (securitypolicy != null) {
+			getMendixObject().setValue(context, MemberNames.SecurityPolicy.toString(), securitypolicy.toString());
+		} else {
+			getMendixObject().setValue(context, MemberNames.SecurityPolicy.toString(), null);
+		}
 	}
 
 	@java.lang.Override
