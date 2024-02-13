@@ -81,6 +81,9 @@ public class FileDocument
 	 */
 	public static system.proxies.FileDocument initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
+		if (com.mendix.core.Core.isSubClassOf("OpcUaClientMx.Certificate", mendixObject.getType())) {
+			return opcuaclientmx.proxies.Certificate.initialize(context, mendixObject);
+		}
 		if (com.mendix.core.Core.isSubClassOf("System.Image", mendixObject.getType())) {
 			return system.proxies.Image.initialize(context, mendixObject);
 		}

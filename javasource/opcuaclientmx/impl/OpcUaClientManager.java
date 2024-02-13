@@ -15,6 +15,7 @@ import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscriptionManager;
 import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
 import org.eclipse.milo.opcua.stack.core.UaException;
+import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
@@ -90,10 +91,10 @@ public class OpcUaClientManager {
 
 	private static OpcUaClient buildNewClient(IContext context, OpcUaServerCfg serverHelper) throws CoreException  {	
 		try {
-			List<EndpointDescription> endpoints = opcUaCreateEndpoint(serverHelper);
+			EndpointDescription endpoint = opcUaCreateEndpoint(serverHelper);
 			
 			logger.info("Initializing new Client for Server: " + serverHelper.getURL());
-			OpcUaClientConfigBuilder cfg =  buildOpcUaCfg(endpoints,serverHelper, context) ; 
+			OpcUaClientConfigBuilder cfg =  buildOpcUaCfg(endpoint, serverHelper, context) ; 
 			OpcUaClient client = OpcUaClient.create(cfg.build());
 			client.connect().get();
 			//Initiates the session.
@@ -154,20 +155,20 @@ public class OpcUaClientManager {
 			});		
 	}
 
-	private static OpcUaClientConfigBuilder buildOpcUaCfg(List<EndpointDescription> endpoints,  
+	private static OpcUaClientConfigBuilder buildOpcUaCfg(EndpointDescription endpoint,  
 			OpcUaServerCfg connector,   IContext context ) throws CoreException  {
 		
 		OpcUaClientConfigBuilder cfg = new OpcUaClientConfigBuilder()
 				.setApplicationName(LocalizedText.english(Constants.getUA_ApplicationName()))
 				.setApplicationUri(Constants.getUA_ApplicationURI())
-				.setEndpoint(endpoints.get(0)) //filter endpoint based on security policy
+				.setEndpoint(endpoint) //filter endpoint based on security policy
 			
 				.setRequestTimeout(uint(5000)) //Set timeout to what fits you.
 				.setSessionTimeout(UInteger.valueOf(60000)); //Set timeout to what fits you.	
 				//Standard configuration for all situations.
         
 		    if (connector.getAuthenticationType() == AuthenticationType.CERTIFICATE ){
-		    	String certPass_encrypted = connector.getCertificatePassword();
+		    	String certPass_encrypted = connector.getAuthenticationCertificate(context).getCertifcatePassword_Encrypted();
 		    	
 		    	//Use this code for test/acceptance/production environments. Test code is available commented out in the bottom of this document.
 		    	OpcUaSslUtil ssl = new OpcUaSslUtil().loadCertFiles(connector, context, Microflows.decrypt(context, certPass_encrypted).toCharArray());
@@ -194,18 +195,19 @@ public class OpcUaClientManager {
 	}
 
 	
-	private static List<EndpointDescription> opcUaCreateEndpoint(OpcUaServerCfg connector) throws CoreException {
+	private static EndpointDescription opcUaCreateEndpoint(OpcUaServerCfg connector) throws CoreException {
 		
 		try {
 			List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(connector.getURL()).get();
-			Integer endpcounter = -1;
-			for (EndpointDescription endp : endpoints) {
-				endp.getSecurityMode().toString();
-				endpcounter++;
-			}
-					
-			//TODO:20201001: Endpoint based on security policy
-			return endpoints;
+
+			EndpointDescription endpoint = endpoints.stream()
+                       .filter(e -> e.getSecurityPolicyUri().equals("http://opcfoundation.org/UA/SecurityPolicy#" + connector.getSecurityPolicy().getCaption()))
+                       .findFirst()
+                       .orElseThrow(() -> new RuntimeException("No desired endpoints supported"));
+			 if(endpoint == null) { 
+				 throw new CoreException ("Endpoint with SecurityPolicy " + connector.getSecurityPolicy().getCaption() + " not found");
+			 }
+			return endpoint; 
 		}
 		catch (Exception e) {
 			throw new CoreException("Unable to setup endpoints for Server: " + connector.getServerID() + ". Exception: " + e.getMessage(), e);

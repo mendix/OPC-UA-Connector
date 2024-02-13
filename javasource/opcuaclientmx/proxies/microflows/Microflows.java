@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.mendix.core.Core;
 import com.mendix.systemwideinterfaces.core.IContext;
+import com.mendix.systemwideinterfaces.core.IMendixObject;
 
 public class Microflows
 {
@@ -29,6 +30,11 @@ public class Microflows
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();
 		Core.microflowCall("OpcUaClientMx.BSd_GracefullyShutdownSubscriptions").withParams(params).execute(context);
+	}
+	public static void mB_ClientSettings_NewEdit(IContext context)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		Core.microflowCall("OpcUaClientMx.MB_ClientSettings_NewEdit").withParams(params).execute(context);
 	}
 	public static void mB_Create_OpcUaServer(IContext context)
 	{
@@ -82,6 +88,12 @@ public class Microflows
 		Map<java.lang.String, Object> params = new HashMap<>();
 		params.put("OpcUaServer", _opcUaServer == null ? null : _opcUaServer.getMendixObject());
 		Core.microflowCall("OpcUaClientMx.MB_ReconnectExistingSubscriptions").withParams(params).execute(context);
+	}
+	public static opcuaclientmx.proxies.ClientSettings mB_RetrieveCreate_ClientSettings(IContext context)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		IMendixObject result = (IMendixObject)Core.microflowCall("OpcUaClientMx.MB_RetrieveCreate_ClientSettings").withParams(params).execute(context);
+		return result == null ? null : opcuaclientmx.proxies.ClientSettings.initialize(context, result);
 	}
 	public static void mB_Save_OpcUaServer(IContext context, opcuaclientmx.proxies.OpcUaServerCfg _opcUaServer)
 	{
