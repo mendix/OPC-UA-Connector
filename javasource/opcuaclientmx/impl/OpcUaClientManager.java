@@ -30,6 +30,7 @@ import com.mendix.systemwideinterfaces.core.IContext;
 import encryption.proxies.microflows.Microflows;
 import opcuaclientmx.proxies.AuthenticationType;
 import opcuaclientmx.proxies.OpcUaServerCfg;
+import opcuaclientmx.proxies.SecurityMode;
 import opcuaclientmx.proxies.constants.Constants;
 
 
@@ -161,8 +162,7 @@ public class OpcUaClientManager {
 		OpcUaClientConfigBuilder cfg = new OpcUaClientConfigBuilder()
 				.setApplicationName(LocalizedText.english(Constants.getUA_ApplicationName()))
 				.setApplicationUri(Constants.getUA_ApplicationURI())
-				.setEndpoint(endpoint) //filter endpoint based on security policy
-			
+				.setEndpoint(endpoint) //filter endpoint based on security policy			
 				.setRequestTimeout(uint(5000)) //Set timeout to what fits you.
 				.setSessionTimeout(UInteger.valueOf(60000)); //Set timeout to what fits you.	
 				//Standard configuration for all situations.
@@ -190,6 +190,14 @@ public class OpcUaClientManager {
 		    else if (connector.getAuthenticationType() == AuthenticationType.NONE) {
 		    		cfg.setIdentityProvider(new AnonymousProvider()); 
 		    }
+		    
+		    if (connector.getSecurityMode() != SecurityMode.Sign)  {
+		    	//load keys and certifcates
+		    	
+		    	
+		    	
+		    }
+		    
 
         return cfg;
 	}

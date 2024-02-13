@@ -14,6 +14,7 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.eclipse.milo.opcua.sdk.server.util.HostnameUtil;
@@ -22,6 +23,11 @@ import org.eclipse.milo.opcua.stack.core.util.SelfSignedCertificateGenerator;
 
 import com.mendix.core.Core;
 import com.mendix.logging.ILogNode;
+import com.mendix.systemwideinterfaces.core.IContext;
+
+import opcuaclientmx.proxies.Certificate;
+import opcuaclientmx.proxies.ClientSettings;
+import opcuaclientmx.proxies.OpcUaServerCfg;
 
 public class OpcUaClientKeyStoreLoader {
 	
@@ -37,6 +43,50 @@ public class OpcUaClientKeyStoreLoader {
     private KeyPair clientKeyPair;
   
 
+    OpcUaClientKeyStoreLoader load(IContext context, Path baseDir, OpcUaServerCfg connector) throws Exception {
+    	KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        Path serverKeyStore = baseDir.resolve("local-client.pfx");
+        logger.info("Loading KeyStore at " + serverKeyStore);
+        
+        if (!Files.exists(serverKeyStore)) {
+            keyStore.load(null, PASSWORD);
+
+           
+        } else {
+            try (InputStream in = Files.newInputStream(serverKeyStore)) {
+                keyStore.load(in, PASSWORD);
+            }
+        }
+        
+        List <ClientSettings> clientSettingsList = ClientSettings.load(connector.getContext(), "/");
+        ClientSettings clientSettings = clientSettingsList.get(0);
+        if(clientSettings == null) throw new Exception("Missing clientSettings");
+        
+        Certificate clientCertificate = clientSettings.getClientCertificate();
+        
+        
+       /*byte[] privateKeyBytes = privateKeyFileInputStream.readAllBytes();
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+        PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
+
+        // Parse the certificate from DER
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        byte[] certificateBytes = certificateFileInputStream.readAllBytes();
+        X509Certificate certificate = (X509Certificate) certificateFactory.generateCertificate(new ByteArrayInputStream(certificateBytes));
+        
+*/
+        Key serverPrivateKey = keyStore.getKey(CLIENT_ALIAS, PASSWORD);
+        if (serverPrivateKey instanceof PrivateKey) {
+            this.clientCertificate = (X509Certificate) keyStore.getCertificate(CLIENT_ALIAS);
+            PublicKey serverPublicKey = this.clientCertificate.getPublicKey();
+            this.clientKeyPair = new KeyPair(serverPublicKey, (PrivateKey) serverPrivateKey);
+        }
+    	
+    	return this;
+    }
+    
+    
     OpcUaClientKeyStoreLoader load(Path baseDir) throws Exception {
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
 
