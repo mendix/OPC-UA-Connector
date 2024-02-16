@@ -1,6 +1,9 @@
 package opcuaclientmx.impl;
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 
+import java.io.File;
+import java.io.IOException;
+import java.security.cert.X509Certificate;
 /*JV May/June 2020*/
 import java.util.HashMap;
 import java.util.List;
@@ -14,8 +17,11 @@ import org.eclipse.milo.opcua.sdk.client.api.identity.X509IdentityProvider;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscriptionManager;
 import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
+import org.eclipse.milo.opcua.stack.client.security.DefaultClientCertificateValidator;
 import org.eclipse.milo.opcua.stack.core.UaException;
+import org.eclipse.milo.opcua.stack.core.security.DefaultTrustListManager;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
+import org.eclipse.milo.opcua.stack.core.security.TrustListManager;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
@@ -191,13 +197,26 @@ public class OpcUaClientManager {
 		    		cfg.setIdentityProvider(new AnonymousProvider()); 
 		    }
 		    
-		    if (connector.getSecurityMode() != SecurityMode.Sign)  {
+		    if (connector.getSecurityMode() != SecurityMode.None)  {
 		    	//load keys and certifcates
+		    	OpcUaClientKeyStoreLoader keyStoreLoader = new OpcUaClientKeyStoreLoader().load(context, connector ); 
 		    	
-		    	
-		    	
-		    }
-		    
+		    	cfg.setIdentityProvider(new X509IdentityProvider(keyStoreLoader.getClientCertificate(), keyStoreLoader.getClientKeyPair().getPrivate())); 
+
+		    	cfg.setCertificateChain(new X509Certificate[]{keyStoreLoader.getServerCertificate()});
+		    	cfg.setKeyPair(keyStoreLoader.getClientKeyPair());
+
+		    	DefaultTrustListManager defaultTrustListManager;
+				try {
+					defaultTrustListManager = new DefaultTrustListManager(new File(System.getProperty("java.io.tmpdir")));
+			    	defaultTrustListManager.addTrustedCertificate(keyStoreLoader.getServerCertificate());			    	
+			    	cfg.setCertificateValidator(new DefaultClientCertificateValidator(defaultTrustListManager));
+
+				} catch (IOException e) {
+					throw new CoreException(e);
+				}
+
+		    }		    			   		   
 
         return cfg;
 	}

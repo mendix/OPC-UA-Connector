@@ -31,8 +31,7 @@ public class OpcUaServerCfg extends system.proxies.FileDocument
 		HasContents("HasContents"),
 		Size("Size"),
 		AuthenticationCertificate("OpcUaClientMx.AuthenticationCertificate"),
-		ServerCertificate("OpcUaClientMx.ServerCertificate"),
-		ServerCRT("OpcUaClientMx.ServerCRT");
+		ServerCertificate("OpcUaClientMx.ServerCertificate");
 
 		private final java.lang.String metaName;
 
@@ -503,53 +502,6 @@ public class OpcUaServerCfg extends system.proxies.FileDocument
 			getMendixObject().setValue(context, MemberNames.ServerCertificate.toString(), null);
 		} else {
 			getMendixObject().setValue(context, MemberNames.ServerCertificate.toString(), servercertificate.getMendixObject().getId());
-		}
-	}
-
-	/**
-	 * @throws com.mendix.core.CoreException
-	 * @return value of ServerCRT
-	 */
-	public final opcuaclientmx.proxies.Certificate getServerCRT() throws com.mendix.core.CoreException
-	{
-		return getServerCRT(getContext());
-	}
-
-	/**
-	 * @param context
-	 * @return value of ServerCRT
-	 * @throws com.mendix.core.CoreException
-	 */
-	public final opcuaclientmx.proxies.Certificate getServerCRT(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
-	{
-		opcuaclientmx.proxies.Certificate result = null;
-		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.ServerCRT.toString());
-		if (identifier != null) {
-			result = opcuaclientmx.proxies.Certificate.load(context, identifier);
-		}
-		return result;
-	}
-
-	/**
-	 * Set value of ServerCRT
-	 * @param servercrt
-	 */
-	public final void setServerCRT(opcuaclientmx.proxies.Certificate servercrt)
-	{
-		setServerCRT(getContext(), servercrt);
-	}
-
-	/**
-	 * Set value of ServerCRT
-	 * @param context
-	 * @param servercrt
-	 */
-	public final void setServerCRT(com.mendix.systemwideinterfaces.core.IContext context, opcuaclientmx.proxies.Certificate servercrt)
-	{
-		if (servercrt == null) {
-			getMendixObject().setValue(context, MemberNames.ServerCRT.toString(), null);
-		} else {
-			getMendixObject().setValue(context, MemberNames.ServerCRT.toString(), servercrt.getMendixObject().getId());
 		}
 	}
 

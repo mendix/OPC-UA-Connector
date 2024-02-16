@@ -102,13 +102,6 @@ public class Microflows
 		IMendixObject result = (IMendixObject)Core.microflowCall("OpcUaClientMx.MB_RetrieveCreate_ServerCert").withParams(params).execute(context);
 		return result == null ? null : opcuaclientmx.proxies.Certificate.initialize(context, result);
 	}
-	public static opcuaclientmx.proxies.Certificate mB_RetrieveCreate_ServerCRT(IContext context, opcuaclientmx.proxies.OpcUaServerCfg _opcUaServerCfg)
-	{
-		Map<java.lang.String, Object> params = new HashMap<>();
-		params.put("OpcUaServerCfg", _opcUaServerCfg == null ? null : _opcUaServerCfg.getMendixObject());
-		IMendixObject result = (IMendixObject)Core.microflowCall("OpcUaClientMx.MB_RetrieveCreate_ServerCRT").withParams(params).execute(context);
-		return result == null ? null : opcuaclientmx.proxies.Certificate.initialize(context, result);
-	}
 	public static void mB_Save_OpcUaServer(IContext context, opcuaclientmx.proxies.OpcUaServerCfg _opcUaServer)
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();
