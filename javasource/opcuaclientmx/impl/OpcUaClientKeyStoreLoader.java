@@ -43,11 +43,6 @@ public class OpcUaClientKeyStoreLoader {
     private X509Certificate serverCertificate;
   
 
-    public X509Certificate getServerCertificate() {
-		return serverCertificate;
-	}
-
-    
 	OpcUaClientKeyStoreLoader load(IContext context, OpcUaServerCfg connector) throws CoreException {
     	
     	              
@@ -55,11 +50,11 @@ public class OpcUaClientKeyStoreLoader {
         ClientSettings clientSettings = clientSettingsList.get(0);
         if(clientSettings == null) throw new CoreException("Missing clientSettings");
         
-        Certificate clientCertificate = clientSettings.getClientCertificate();
-        Certificate privateKey =clientSettings.getPrivateKey();
+        Certificate clientCertificateFileObject = clientSettings.getClientCertificate();
+        Certificate privateKeyFileObject =clientSettings.getPrivateKey();
         
-        InputStream certificateFileInputStream = Core.getFileDocumentContent(context, clientCertificate.getMendixObject());
-        InputStream privateKeyFileInputStream = Core.getFileDocumentContent(context, privateKey.getMendixObject());
+        InputStream certificateFileInputStream = Core.getFileDocumentContent(context, clientCertificateFileObject.getMendixObject());
+        InputStream privateKeyFileInputStream = Core.getFileDocumentContent(context, privateKeyFileObject.getMendixObject());
               
         try {
 	        // Parse the private key from PEM
@@ -68,14 +63,14 @@ public class OpcUaClientKeyStoreLoader {
 	        PEMKeyPair pemKeyPair = (PEMKeyPair) keyObject;
 	        this.clientKeyPair  = new JcaPEMKeyConverter().getKeyPair(pemKeyPair);
 	
-	        // Parse the certificate from PEM
+	        // Parse the certificate from PEM or Der
 	        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
 	        this.clientCertificate = (X509Certificate) certificateFactory.generateCertificate(certificateFileInputStream);
-	        
 	        
 	        Certificate serverCertifcate = connector.getServerCertificate(context);
 	        InputStream serverCertificateFileInputStream = Core.getFileDocumentContent(context, serverCertifcate.getMendixObject());      
 	        this.serverCertificate = (X509Certificate) certificateFactory.generateCertificate(serverCertificateFileInputStream);
+	        
         } catch(IOException e) {
         	logger.error(e);
         	throw new CoreException(e);
@@ -86,7 +81,10 @@ public class OpcUaClientKeyStoreLoader {
     	return this;
     }
     
-    
+	X509Certificate getServerCertificate() {
+		return serverCertificate;
+	}
+
    
     X509Certificate getClientCertificate() {
         return this.clientCertificate;
