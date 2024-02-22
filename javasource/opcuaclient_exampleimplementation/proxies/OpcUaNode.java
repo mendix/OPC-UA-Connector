@@ -48,7 +48,7 @@ public class OpcUaNode
 		BinaryEncodingId_OpcUaNode("OpcUaClient_ExampleImplementation.BinaryEncodingId_OpcUaNode"),
 		TypeId_OpcUaNode("OpcUaClient_ExampleImplementation.TypeId_OpcUaNode");
 
-		private java.lang.String metaName;
+		private final java.lang.String metaName;
 
 		MemberNames(java.lang.String s)
 		{
@@ -64,15 +64,17 @@ public class OpcUaNode
 
 	public OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		this(context, com.mendix.core.Core.instantiate(context, "OpcUaClient_ExampleImplementation.OpcUaNode"));
+		this(context, com.mendix.core.Core.instantiate(context, entityName));
 	}
 
 	protected OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject opcUaNodeMendixObject)
 	{
-		if (opcUaNodeMendixObject == null)
+		if (opcUaNodeMendixObject == null) {
 			throw new java.lang.IllegalArgumentException("The given object cannot be null.");
-		if (!com.mendix.core.Core.isSubClassOf("OpcUaClient_ExampleImplementation.OpcUaNode", opcUaNodeMendixObject.getType()))
-			throw new java.lang.IllegalArgumentException("The given object is not a OpcUaClient_ExampleImplementation.OpcUaNode");
+		}
+		if (!com.mendix.core.Core.isSubClassOf(entityName, opcUaNodeMendixObject.getType())) {
+			throw new java.lang.IllegalArgumentException(String.format("The given object is not a %s", entityName));
+		}	
 
 		this.opcUaNodeMendixObject = opcUaNodeMendixObject;
 		this.context = context;
@@ -90,6 +92,9 @@ public class OpcUaNode
 	/**
 	 * Initialize a proxy using context (recommended). This context will be used for security checking when the get- and set-methods without context parameters are called.
 	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.createSudoClone() can be used to obtain sudo access).
+	 * @param context The context to be used
+	 * @param mendixObject The Mendix object for the new instance
+	 * @return a new instance of this proxy class
 	 */
 	public static opcuaclient_exampleimplementation.proxies.OpcUaNode initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
@@ -104,14 +109,16 @@ public class OpcUaNode
 
 	public static java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> load(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String xpathConstraint) throws com.mendix.core.CoreException
 	{
-		java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> result = new java.util.ArrayList<opcuaclient_exampleimplementation.proxies.OpcUaNode>();
-		for (com.mendix.systemwideinterfaces.core.IMendixObject obj : com.mendix.core.Core.retrieveXPathQuery(context, "//OpcUaClient_ExampleImplementation.OpcUaNode" + xpathConstraint))
-			result.add(opcuaclient_exampleimplementation.proxies.OpcUaNode.initialize(context, obj));
-		return result;
+		return com.mendix.core.Core.createXPathQuery(String.format("//%1$s%2$s", entityName, xpathConstraint))
+			.execute(context)
+			.stream()
+			.map(obj -> opcuaclient_exampleimplementation.proxies.OpcUaNode.initialize(context, obj))
+			.collect(java.util.stream.Collectors.toList());
 	}
 
 	/**
 	 * Commit the changes made on this proxy object.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit() throws com.mendix.core.CoreException
 	{
@@ -120,6 +127,7 @@ public class OpcUaNode
 
 	/**
 	 * Commit the changes made on this proxy object using the specified context.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
@@ -718,6 +726,7 @@ public class OpcUaNode
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of OpcUaNode_Set
 	 */
 	public final opcuaclient_exampleimplementation.proxies.Set getOpcUaNode_Set() throws com.mendix.core.CoreException
@@ -728,13 +737,15 @@ public class OpcUaNode
 	/**
 	 * @param context
 	 * @return value of OpcUaNode_Set
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final opcuaclient_exampleimplementation.proxies.Set getOpcUaNode_Set(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		opcuaclient_exampleimplementation.proxies.Set result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.OpcUaNode_Set.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = opcuaclient_exampleimplementation.proxies.Set.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -754,13 +765,15 @@ public class OpcUaNode
 	 */
 	public final void setOpcUaNode_Set(com.mendix.systemwideinterfaces.core.IContext context, opcuaclient_exampleimplementation.proxies.Set opcuanode_set)
 	{
-		if (opcuanode_set == null)
+		if (opcuanode_set == null) {
 			getMendixObject().setValue(context, MemberNames.OpcUaNode_Set.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.OpcUaNode_Set.toString(), opcuanode_set.getMendixObject().getId());
+		}
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of Children
 	 */
 	public final java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> getChildren() throws com.mendix.core.CoreException
@@ -771,16 +784,19 @@ public class OpcUaNode
 	/**
 	 * @param context
 	 * @return value of Children
+	 * @throws com.mendix.core.CoreException
 	 */
 	@SuppressWarnings("unchecked")
 	public final java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> getChildren(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
-		java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> result = new java.util.ArrayList<opcuaclient_exampleimplementation.proxies.OpcUaNode>();
+		java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> result = new java.util.ArrayList<>();
 		Object valueObject = getMendixObject().getValue(context, MemberNames.Children.toString());
-		if (valueObject == null)
+		if (valueObject == null) {
 			return result;
-		for (com.mendix.systemwideinterfaces.core.IMendixObject mendixObject : com.mendix.core.Core.retrieveIdList(context, (java.util.List<com.mendix.systemwideinterfaces.core.IMendixIdentifier>) valueObject))
+		}
+		for (com.mendix.systemwideinterfaces.core.IMendixObject mendixObject : com.mendix.core.Core.retrieveIdList(context, (java.util.List<com.mendix.systemwideinterfaces.core.IMendixIdentifier>) valueObject)) {
 			result.add(opcuaclient_exampleimplementation.proxies.OpcUaNode.initialize(context, mendixObject));
+		}
 		return result;
 	}
 
@@ -800,13 +816,16 @@ public class OpcUaNode
 	 */
 	public final void setChildren(com.mendix.systemwideinterfaces.core.IContext context, java.util.List<opcuaclient_exampleimplementation.proxies.OpcUaNode> children)
 	{
-		java.util.List<com.mendix.systemwideinterfaces.core.IMendixIdentifier> identifiers = new java.util.ArrayList<com.mendix.systemwideinterfaces.core.IMendixIdentifier>();
-		for (opcuaclient_exampleimplementation.proxies.OpcUaNode proxyObject : children)
-			identifiers.add(proxyObject.getMendixObject().getId());
+		var identifiers = children
+			.stream()
+			.map(proxyObject -> proxyObject.getMendixObject().getId())
+			.collect(java.util.stream.Collectors.toList());
+		
 		getMendixObject().setValue(context, MemberNames.Children.toString(), identifiers);
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of Parent
 	 */
 	public final opcuaclient_exampleimplementation.proxies.OpcUaNode getParent() throws com.mendix.core.CoreException
@@ -817,13 +836,15 @@ public class OpcUaNode
 	/**
 	 * @param context
 	 * @return value of Parent
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final opcuaclient_exampleimplementation.proxies.OpcUaNode getParent(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		opcuaclient_exampleimplementation.proxies.OpcUaNode result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.Parent.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = opcuaclient_exampleimplementation.proxies.OpcUaNode.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -843,13 +864,15 @@ public class OpcUaNode
 	 */
 	public final void setParent(com.mendix.systemwideinterfaces.core.IContext context, opcuaclient_exampleimplementation.proxies.OpcUaNode parent)
 	{
-		if (parent == null)
+		if (parent == null) {
 			getMendixObject().setValue(context, MemberNames.Parent.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.Parent.toString(), parent.getMendixObject().getId());
+		}
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of ReferenceTypeId_OpcUaNode
 	 */
 	public final opcuaclient_exampleimplementation.proxies.ReferenceTypeId getReferenceTypeId_OpcUaNode() throws com.mendix.core.CoreException
@@ -860,13 +883,15 @@ public class OpcUaNode
 	/**
 	 * @param context
 	 * @return value of ReferenceTypeId_OpcUaNode
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final opcuaclient_exampleimplementation.proxies.ReferenceTypeId getReferenceTypeId_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		opcuaclient_exampleimplementation.proxies.ReferenceTypeId result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.ReferenceTypeId_OpcUaNode.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = opcuaclient_exampleimplementation.proxies.ReferenceTypeId.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -886,13 +911,15 @@ public class OpcUaNode
 	 */
 	public final void setReferenceTypeId_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context, opcuaclient_exampleimplementation.proxies.ReferenceTypeId referencetypeid_opcuanode)
 	{
-		if (referencetypeid_opcuanode == null)
+		if (referencetypeid_opcuanode == null) {
 			getMendixObject().setValue(context, MemberNames.ReferenceTypeId_OpcUaNode.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.ReferenceTypeId_OpcUaNode.toString(), referencetypeid_opcuanode.getMendixObject().getId());
+		}
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of NodeId_OpcUaNode
 	 */
 	public final opcuaclient_exampleimplementation.proxies.NodeId getNodeId_OpcUaNode() throws com.mendix.core.CoreException
@@ -903,13 +930,15 @@ public class OpcUaNode
 	/**
 	 * @param context
 	 * @return value of NodeId_OpcUaNode
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final opcuaclient_exampleimplementation.proxies.NodeId getNodeId_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		opcuaclient_exampleimplementation.proxies.NodeId result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.NodeId_OpcUaNode.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = opcuaclient_exampleimplementation.proxies.NodeId.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -929,13 +958,15 @@ public class OpcUaNode
 	 */
 	public final void setNodeId_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context, opcuaclient_exampleimplementation.proxies.NodeId nodeid_opcuanode)
 	{
-		if (nodeid_opcuanode == null)
+		if (nodeid_opcuanode == null) {
 			getMendixObject().setValue(context, MemberNames.NodeId_OpcUaNode.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.NodeId_OpcUaNode.toString(), nodeid_opcuanode.getMendixObject().getId());
+		}
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of BrowseName_OpcUaNode
 	 */
 	public final opcuaclient_exampleimplementation.proxies.BrowseName getBrowseName_OpcUaNode() throws com.mendix.core.CoreException
@@ -946,13 +977,15 @@ public class OpcUaNode
 	/**
 	 * @param context
 	 * @return value of BrowseName_OpcUaNode
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final opcuaclient_exampleimplementation.proxies.BrowseName getBrowseName_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		opcuaclient_exampleimplementation.proxies.BrowseName result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.BrowseName_OpcUaNode.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = opcuaclient_exampleimplementation.proxies.BrowseName.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -972,13 +1005,15 @@ public class OpcUaNode
 	 */
 	public final void setBrowseName_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context, opcuaclient_exampleimplementation.proxies.BrowseName browsename_opcuanode)
 	{
-		if (browsename_opcuanode == null)
+		if (browsename_opcuanode == null) {
 			getMendixObject().setValue(context, MemberNames.BrowseName_OpcUaNode.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.BrowseName_OpcUaNode.toString(), browsename_opcuanode.getMendixObject().getId());
+		}
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of DisplayName_OpcUaNode
 	 */
 	public final opcuaclient_exampleimplementation.proxies.DisplayName getDisplayName_OpcUaNode() throws com.mendix.core.CoreException
@@ -989,13 +1024,15 @@ public class OpcUaNode
 	/**
 	 * @param context
 	 * @return value of DisplayName_OpcUaNode
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final opcuaclient_exampleimplementation.proxies.DisplayName getDisplayName_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		opcuaclient_exampleimplementation.proxies.DisplayName result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.DisplayName_OpcUaNode.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = opcuaclient_exampleimplementation.proxies.DisplayName.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -1015,13 +1052,15 @@ public class OpcUaNode
 	 */
 	public final void setDisplayName_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context, opcuaclient_exampleimplementation.proxies.DisplayName displayname_opcuanode)
 	{
-		if (displayname_opcuanode == null)
+		if (displayname_opcuanode == null) {
 			getMendixObject().setValue(context, MemberNames.DisplayName_OpcUaNode.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.DisplayName_OpcUaNode.toString(), displayname_opcuanode.getMendixObject().getId());
+		}
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of TypeDefinition_OpcUaNode
 	 */
 	public final opcuaclient_exampleimplementation.proxies.TypeDefinition getTypeDefinition_OpcUaNode() throws com.mendix.core.CoreException
@@ -1032,13 +1071,15 @@ public class OpcUaNode
 	/**
 	 * @param context
 	 * @return value of TypeDefinition_OpcUaNode
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final opcuaclient_exampleimplementation.proxies.TypeDefinition getTypeDefinition_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		opcuaclient_exampleimplementation.proxies.TypeDefinition result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.TypeDefinition_OpcUaNode.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = opcuaclient_exampleimplementation.proxies.TypeDefinition.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -1058,13 +1099,15 @@ public class OpcUaNode
 	 */
 	public final void setTypeDefinition_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context, opcuaclient_exampleimplementation.proxies.TypeDefinition typedefinition_opcuanode)
 	{
-		if (typedefinition_opcuanode == null)
+		if (typedefinition_opcuanode == null) {
 			getMendixObject().setValue(context, MemberNames.TypeDefinition_OpcUaNode.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.TypeDefinition_OpcUaNode.toString(), typedefinition_opcuanode.getMendixObject().getId());
+		}
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of XmlEncodingId_OpcUaNode
 	 */
 	public final opcuaclient_exampleimplementation.proxies.XmlEncodingId getXmlEncodingId_OpcUaNode() throws com.mendix.core.CoreException
@@ -1075,13 +1118,15 @@ public class OpcUaNode
 	/**
 	 * @param context
 	 * @return value of XmlEncodingId_OpcUaNode
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final opcuaclient_exampleimplementation.proxies.XmlEncodingId getXmlEncodingId_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		opcuaclient_exampleimplementation.proxies.XmlEncodingId result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.XmlEncodingId_OpcUaNode.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = opcuaclient_exampleimplementation.proxies.XmlEncodingId.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -1101,13 +1146,15 @@ public class OpcUaNode
 	 */
 	public final void setXmlEncodingId_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context, opcuaclient_exampleimplementation.proxies.XmlEncodingId xmlencodingid_opcuanode)
 	{
-		if (xmlencodingid_opcuanode == null)
+		if (xmlencodingid_opcuanode == null) {
 			getMendixObject().setValue(context, MemberNames.XmlEncodingId_OpcUaNode.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.XmlEncodingId_OpcUaNode.toString(), xmlencodingid_opcuanode.getMendixObject().getId());
+		}
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of BinaryEncodingId_OpcUaNode
 	 */
 	public final opcuaclient_exampleimplementation.proxies.BinaryEncodingId getBinaryEncodingId_OpcUaNode() throws com.mendix.core.CoreException
@@ -1118,13 +1165,15 @@ public class OpcUaNode
 	/**
 	 * @param context
 	 * @return value of BinaryEncodingId_OpcUaNode
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final opcuaclient_exampleimplementation.proxies.BinaryEncodingId getBinaryEncodingId_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		opcuaclient_exampleimplementation.proxies.BinaryEncodingId result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.BinaryEncodingId_OpcUaNode.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = opcuaclient_exampleimplementation.proxies.BinaryEncodingId.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -1144,13 +1193,15 @@ public class OpcUaNode
 	 */
 	public final void setBinaryEncodingId_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context, opcuaclient_exampleimplementation.proxies.BinaryEncodingId binaryencodingid_opcuanode)
 	{
-		if (binaryencodingid_opcuanode == null)
+		if (binaryencodingid_opcuanode == null) {
 			getMendixObject().setValue(context, MemberNames.BinaryEncodingId_OpcUaNode.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.BinaryEncodingId_OpcUaNode.toString(), binaryencodingid_opcuanode.getMendixObject().getId());
+		}
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of TypeId_OpcUaNode
 	 */
 	public final opcuaclient_exampleimplementation.proxies.TypeId getTypeId_OpcUaNode() throws com.mendix.core.CoreException
@@ -1161,13 +1212,15 @@ public class OpcUaNode
 	/**
 	 * @param context
 	 * @return value of TypeId_OpcUaNode
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final opcuaclient_exampleimplementation.proxies.TypeId getTypeId_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		opcuaclient_exampleimplementation.proxies.TypeId result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.TypeId_OpcUaNode.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = opcuaclient_exampleimplementation.proxies.TypeId.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -1187,10 +1240,11 @@ public class OpcUaNode
 	 */
 	public final void setTypeId_OpcUaNode(com.mendix.systemwideinterfaces.core.IContext context, opcuaclient_exampleimplementation.proxies.TypeId typeid_opcuanode)
 	{
-		if (typeid_opcuanode == null)
+		if (typeid_opcuanode == null) {
 			getMendixObject().setValue(context, MemberNames.TypeId_OpcUaNode.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.TypeId_OpcUaNode.toString(), typeid_opcuanode.getMendixObject().getId());
+		}
 	}
 
 	/**
@@ -1212,9 +1266,9 @@ public class OpcUaNode
 	@java.lang.Override
 	public boolean equals(Object obj)
 	{
-		if (obj == this)
+		if (obj == this) {
 			return true;
-
+		}
 		if (obj != null && getClass().equals(obj.getClass()))
 		{
 			final opcuaclient_exampleimplementation.proxies.OpcUaNode that = (opcuaclient_exampleimplementation.proxies.OpcUaNode) obj;
@@ -1234,7 +1288,7 @@ public class OpcUaNode
 	 */
 	public static java.lang.String getType()
 	{
-		return "OpcUaClient_ExampleImplementation.OpcUaNode";
+		return entityName;
 	}
 
 	/**

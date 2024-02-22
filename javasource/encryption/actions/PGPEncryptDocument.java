@@ -15,11 +15,10 @@ import com.mendix.webui.CustomJavaAction;
 import encryption.pgp.PGPFileProcessor;
 
 /**
- * Encrypt the FileDocument using PGP encryption. 
- *  This is allowed to be the same FileDocument instance and the action will just store the encrypted file in the provided entity.
+ * Encrypt the FileDocument using PGP encryption.
+ * This is allowed to be the same FileDocument instance and the action will just store the encrypted file in the provided entity.
  * 
- * The certificate must be a valid public PGP key provided by the external party. If you want to sign the document you can optionally provide the private key to used for signing. 
- * The external party would have to validate the signature against the pub key from signature key.
+ * The certificate must be a valid public PGP key provided by the external party.
  * 
  * This action will either return true or an exception
  */
@@ -31,28 +30,23 @@ public class PGPEncryptDocument extends CustomJavaAction<java.lang.Boolean>
 	private system.proxies.FileDocument DocumentToEncrypt;
 	private IMendixObject __OutputDocument;
 	private system.proxies.FileDocument OutputDocument;
-	private IMendixObject __SigningCertificate;
-	private encryption.proxies.PGPCertificate SigningCertificate;
 
-	public PGPEncryptDocument(IContext context, IMendixObject ExternalPublicKey, IMendixObject DocumentToEncrypt, IMendixObject OutputDocument, IMendixObject SigningCertificate)
+	public PGPEncryptDocument(IContext context, IMendixObject ExternalPublicKey, IMendixObject DocumentToEncrypt, IMendixObject OutputDocument)
 	{
 		super(context);
 		this.__ExternalPublicKey = ExternalPublicKey;
 		this.__DocumentToEncrypt = DocumentToEncrypt;
 		this.__OutputDocument = OutputDocument;
-		this.__SigningCertificate = SigningCertificate;
 	}
 
 	@java.lang.Override
 	public java.lang.Boolean executeAction() throws Exception
 	{
-		this.ExternalPublicKey = __ExternalPublicKey == null ? null : system.proxies.FileDocument.initialize(getContext(), __ExternalPublicKey);
+		this.ExternalPublicKey = this.__ExternalPublicKey == null ? null : system.proxies.FileDocument.initialize(getContext(), __ExternalPublicKey);
 
-		this.DocumentToEncrypt = __DocumentToEncrypt == null ? null : system.proxies.FileDocument.initialize(getContext(), __DocumentToEncrypt);
+		this.DocumentToEncrypt = this.__DocumentToEncrypt == null ? null : system.proxies.FileDocument.initialize(getContext(), __DocumentToEncrypt);
 
-		this.OutputDocument = __OutputDocument == null ? null : system.proxies.FileDocument.initialize(getContext(), __OutputDocument);
-
-		this.SigningCertificate = __SigningCertificate == null ? null : encryption.proxies.PGPCertificate.initialize(getContext(), __SigningCertificate);
+		this.OutputDocument = this.__OutputDocument == null ? null : system.proxies.FileDocument.initialize(getContext(), __OutputDocument);
 
 		// BEGIN USER CODE
 
@@ -62,15 +56,13 @@ public class PGPEncryptDocument extends CustomJavaAction<java.lang.Boolean>
 		p.setAsciiArmored(true);
 		p.setPublicKeyFileName(this.ExternalPublicKey.getMendixObject());
 
-		// If we are going to validate the signature we also need the private key and passphrase
-		// p.setPassphrase( Microflows.decrypt(getContext(), this.SigningCertificate.getPassPhrase_Encrypted()) );
-
 		return p.encrypt(getContext());
 		// END USER CODE
 	}
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

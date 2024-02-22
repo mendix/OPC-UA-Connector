@@ -32,9 +32,9 @@ public class OpcUaRefreshSubscription extends CustomJavaAction<java.lang.Void>
 	@java.lang.Override
 	public java.lang.Void executeAction() throws Exception
 	{
-		this.OpcUaServerCfg = __OpcUaServerCfg == null ? null : opcuaclientmx.proxies.OpcUaServerCfg.initialize(getContext(), __OpcUaServerCfg);
+		this.OpcUaServerCfg = this.__OpcUaServerCfg == null ? null : opcuaclientmx.proxies.OpcUaServerCfg.initialize(getContext(), __OpcUaServerCfg);
 
-		this.MonitoredItemObject = __MonitoredItemObject == null ? null : opcuaclientmx.proxies.MonitoredItem.initialize(getContext(), __MonitoredItemObject);
+		this.MonitoredItemObject = this.__MonitoredItemObject == null ? null : opcuaclientmx.proxies.MonitoredItem.initialize(getContext(), __MonitoredItemObject);
 
 		// BEGIN USER CODE
 		
@@ -49,6 +49,7 @@ public class OpcUaRefreshSubscription extends CustomJavaAction<java.lang.Void>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

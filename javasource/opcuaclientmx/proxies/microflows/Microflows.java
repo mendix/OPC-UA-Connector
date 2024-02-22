@@ -7,12 +7,19 @@ package opcuaclientmx.proxies.microflows;
 import java.util.HashMap;
 import java.util.Map;
 import com.mendix.core.Core;
-import com.mendix.core.CoreException;
-import com.mendix.systemwideinterfaces.MendixRuntimeException;
 import com.mendix.systemwideinterfaces.core.IContext;
+import com.mendix.systemwideinterfaces.core.IMendixObject;
 
 public class Microflows
 {
+	/**
+	 * @deprecated
+	 * The default constructor of the Microflows class should not be used.
+	 * Use the static microflow invocation methods instead.
+	 */
+	@java.lang.Deprecated(since = "9.12", forRemoval = true)
+	public Microflows() {}
+
 	// These are the microflows for the OpcUaClientMx module
 	public static boolean aSu_ReinitializeSubscriptions(IContext context)
 	{
@@ -23,6 +30,11 @@ public class Microflows
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();
 		Core.microflowCall("OpcUaClientMx.BSd_GracefullyShutdownSubscriptions").withParams(params).execute(context);
+	}
+	public static void mB_ClientSettings_NewEdit(IContext context)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		Core.microflowCall("OpcUaClientMx.MB_ClientSettings_NewEdit").withParams(params).execute(context);
 	}
 	public static void mB_Create_OpcUaServer(IContext context)
 	{
@@ -76,6 +88,19 @@ public class Microflows
 		Map<java.lang.String, Object> params = new HashMap<>();
 		params.put("OpcUaServer", _opcUaServer == null ? null : _opcUaServer.getMendixObject());
 		Core.microflowCall("OpcUaClientMx.MB_ReconnectExistingSubscriptions").withParams(params).execute(context);
+	}
+	public static opcuaclientmx.proxies.ClientSettings mB_RetrieveCreate_ClientSettings(IContext context)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		IMendixObject result = (IMendixObject)Core.microflowCall("OpcUaClientMx.MB_RetrieveCreate_ClientSettings").withParams(params).execute(context);
+		return result == null ? null : opcuaclientmx.proxies.ClientSettings.initialize(context, result);
+	}
+	public static opcuaclientmx.proxies.Certificate mB_RetrieveCreate_ServerCert(IContext context, opcuaclientmx.proxies.OpcUaServerCfg _opcUaServerCfg)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		params.put("OpcUaServerCfg", _opcUaServerCfg == null ? null : _opcUaServerCfg.getMendixObject());
+		IMendixObject result = (IMendixObject)Core.microflowCall("OpcUaClientMx.MB_RetrieveCreate_ServerCert").withParams(params).execute(context);
+		return result == null ? null : opcuaclientmx.proxies.Certificate.initialize(context, result);
 	}
 	public static void mB_Save_OpcUaServer(IContext context, opcuaclientmx.proxies.OpcUaServerCfg _opcUaServer)
 	{

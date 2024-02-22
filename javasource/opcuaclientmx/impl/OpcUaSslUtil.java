@@ -12,6 +12,7 @@ import com.mendix.core.CoreException;
 import com.mendix.systemwideinterfaces.core.IContext;
 
 import opcuaclientmx.proxies.OpcUaServerCfg;
+import opcuaclientmx.proxies.Certificate;
 
 
 /**
@@ -30,8 +31,8 @@ public class OpcUaSslUtil {
 	public OpcUaSslUtil loadCertFiles( final OpcUaServerCfg serverCfg, IContext context, char[] keyPassword) throws CoreException {
 		try {
 			KeyStore keyStore = KeyStore.getInstance("PKCS12");
-			
-			InputStream inp = Core.getFileDocumentContent(context, serverCfg.getMendixObject());
+			Certificate authCertificate = serverCfg.getAuthenticationCertificate(context);
+			InputStream inp = Core.getFileDocumentContent(context, authCertificate.getMendixObject());
 			
 			keyStore.load(inp, keyPassword);
 

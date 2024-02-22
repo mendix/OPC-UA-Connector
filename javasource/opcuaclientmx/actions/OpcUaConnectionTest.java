@@ -29,7 +29,7 @@ public class OpcUaConnectionTest extends CustomJavaAction<java.lang.Void>
 	@java.lang.Override
 	public java.lang.Void executeAction() throws Exception
 	{
-		this.OpcUaServerCfg = __OpcUaServerCfg == null ? null : opcuaclientmx.proxies.OpcUaServerCfg.initialize(getContext(), __OpcUaServerCfg);
+		this.OpcUaServerCfg = this.__OpcUaServerCfg == null ? null : opcuaclientmx.proxies.OpcUaServerCfg.initialize(getContext(), __OpcUaServerCfg);
 
 		// BEGIN USER CODE
 		
@@ -43,6 +43,7 @@ public class OpcUaConnectionTest extends CustomJavaAction<java.lang.Void>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

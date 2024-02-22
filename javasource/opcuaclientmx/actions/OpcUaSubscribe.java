@@ -35,9 +35,9 @@ public class OpcUaSubscribe extends CustomJavaAction<IMendixObject>
 	@java.lang.Override
 	public IMendixObject executeAction() throws Exception
 	{
-		this.OpcUaServerCfg = __OpcUaServerCfg == null ? null : opcuaclientmx.proxies.OpcUaServerCfg.initialize(getContext(), __OpcUaServerCfg);
+		this.OpcUaServerCfg = this.__OpcUaServerCfg == null ? null : opcuaclientmx.proxies.OpcUaServerCfg.initialize(getContext(), __OpcUaServerCfg);
 
-		this.Subscription = __Subscription == null ? null : opcuaclientmx.proxies.Subscription.initialize(getContext(), __Subscription);
+		this.Subscription = this.__Subscription == null ? null : opcuaclientmx.proxies.Subscription.initialize(getContext(), __Subscription);
 
 		// BEGIN USER CODE
 		return SubscriptionManager._getInstance().addSubscription(getContext(), this.OpcUaServerCfg, this.Subscription, this.nodeId, this.OnMessageMicroflow);
@@ -47,6 +47,7 @@ public class OpcUaSubscribe extends CustomJavaAction<IMendixObject>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

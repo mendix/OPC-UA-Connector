@@ -1,6 +1,12 @@
 package opcuaclientmx.impl;
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /*JV May/June 2020*/
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +20,10 @@ import org.eclipse.milo.opcua.sdk.client.api.identity.X509IdentityProvider;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscriptionManager;
 import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
+import org.eclipse.milo.opcua.stack.client.security.DefaultClientCertificateValidator;
 import org.eclipse.milo.opcua.stack.core.UaException;
+import org.eclipse.milo.opcua.stack.core.security.DefaultTrustListManager;
+
 import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
@@ -29,6 +38,7 @@ import com.mendix.systemwideinterfaces.core.IContext;
 import encryption.proxies.microflows.Microflows;
 import opcuaclientmx.proxies.AuthenticationType;
 import opcuaclientmx.proxies.OpcUaServerCfg;
+import opcuaclientmx.proxies.SecurityMode;
 import opcuaclientmx.proxies.constants.Constants;
 
 
@@ -90,10 +100,10 @@ public class OpcUaClientManager {
 
 	private static OpcUaClient buildNewClient(IContext context, OpcUaServerCfg serverHelper) throws CoreException  {	
 		try {
-			List<EndpointDescription> endpoints = opcUaCreateEndpoint(serverHelper);
+			EndpointDescription endpoint = opcUaCreateEndpoint(serverHelper);
 			
 			logger.info("Initializing new Client for Server: " + serverHelper.getURL());
-			OpcUaClientConfigBuilder cfg =  buildOpcUaCfg(endpoints,serverHelper, context) ; 
+			OpcUaClientConfigBuilder cfg =  buildOpcUaCfg(endpoint, serverHelper, context) ; 
 			OpcUaClient client = OpcUaClient.create(cfg.build());
 			client.connect().get();
 			//Initiates the session.
@@ -154,20 +164,19 @@ public class OpcUaClientManager {
 			});		
 	}
 
-	private static OpcUaClientConfigBuilder buildOpcUaCfg(List<EndpointDescription> endpoints,  
+	private static OpcUaClientConfigBuilder buildOpcUaCfg(EndpointDescription endpoint,  
 			OpcUaServerCfg connector,   IContext context ) throws CoreException  {
 		
 		OpcUaClientConfigBuilder cfg = new OpcUaClientConfigBuilder()
 				.setApplicationName(LocalizedText.english(Constants.getUA_ApplicationName()))
 				.setApplicationUri(Constants.getUA_ApplicationURI())
-				.setEndpoint(endpoints.get(0)) //filter endpoint based on security policy
-			
+				.setEndpoint(endpoint) //filter endpoint based on security policy			
 				.setRequestTimeout(uint(5000)) //Set timeout to what fits you.
 				.setSessionTimeout(UInteger.valueOf(60000)); //Set timeout to what fits you.	
 				//Standard configuration for all situations.
         
 		    if (connector.getAuthenticationType() == AuthenticationType.CERTIFICATE ){
-		    	String certPass_encrypted = connector.getCertificatePassword();
+		    	String certPass_encrypted = connector.getAuthenticationCertificate(context).getCertifcatePassword_Encrypted();
 		    	
 		    	//Use this code for test/acceptance/production environments. Test code is available commented out in the bottom of this document.
 		    	OpcUaSslUtil ssl = new OpcUaSslUtil().loadCertFiles(connector, context, Microflows.decrypt(context, certPass_encrypted).toCharArray());
@@ -189,23 +198,67 @@ public class OpcUaClientManager {
 		    else if (connector.getAuthenticationType() == AuthenticationType.NONE) {
 		    		cfg.setIdentityProvider(new AnonymousProvider()); 
 		    }
+		    
+		    if (connector.getSecurityMode() != SecurityMode.None)  {
+		    	//load keys and certifcates		    	
+		    	try {
+			    	Path securityTempDir = Paths.get(System.getProperty("java.io.tmpdir"), "client", "security");
+			        Files.createDirectories(securityTempDir);
+			        if (!Files.exists(securityTempDir)) {
+			            throw new CoreException("unable to create security dir: " + securityTempDir);
+			        }
+	
+			        File pkiDir = securityTempDir.resolve("pki").toFile();
+	
+			        MxClientKeyStoreLoader mxKeyStoreLoader = new MxClientKeyStoreLoader().load(securityTempDir, context, connector ); 
+			        DefaultTrustListManager trustListManager = new DefaultTrustListManager(pkiDir);
+			        DefaultClientCertificateValidator certificateValidator =
+			            new DefaultClientCertificateValidator(trustListManager);
+				
+					trustListManager.addTrustedCertificate(mxKeyStoreLoader.getServerCertificate());
+					
+					
+			        //Use this KeyStoreloader when to test with self generated selfSignedKeys
+			        if(mxKeyStoreLoader.UseSelfSignedGeneratedClientCertificates()) {
+					
+			        	//Generate self signed certificates using App URI.    	
+			        	DefaultSelfSignedKeyStoreLoader keyStoreLoader = new DefaultSelfSignedKeyStoreLoader().load(securityTempDir, Constants.getUA_ApplicationURI());
+			        	cfg.setKeyPair(keyStoreLoader.getClientKeyPair());
+				    	cfg.setCertificate(keyStoreLoader.getClientCertificate());
+				    	cfg.setCertificateChain(keyStoreLoader.getClientCertificateChain());
+				    	
+			        }
+			        else {
+			        	cfg.setKeyPair(mxKeyStoreLoader.getClientKeyPair());
+				    	cfg.setCertificate(mxKeyStoreLoader.getClientCertificate());
+				    	cfg.setCertificateChain(mxKeyStoreLoader.getClientCertificateChain());
+				    	
+			        }
+			        	
+			    	cfg.setCertificateValidator(certificateValidator);
+			    	
+				} catch (IOException e) {
+					throw new CoreException(e);
+				}
+		    }		    			   		   
 
         return cfg;
 	}
 
 	
-	private static List<EndpointDescription> opcUaCreateEndpoint(OpcUaServerCfg connector) throws CoreException {
+	private static EndpointDescription opcUaCreateEndpoint(OpcUaServerCfg connector) throws CoreException {
 		
 		try {
 			List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(connector.getURL()).get();
-			Integer endpcounter = -1;
-			for (EndpointDescription endp : endpoints) {
-				endp.getSecurityMode().toString();
-				endpcounter++;
-			}
-					
-			//TODO:20201001: Endpoint based on security policy
-			return endpoints;
+
+			EndpointDescription endpoint = endpoints.stream()
+                       .filter(e -> e.getSecurityPolicyUri().equals("http://opcfoundation.org/UA/SecurityPolicy#" + connector.getSecurityPolicy().getCaption()))
+                       .findFirst()
+                       .orElseThrow(() -> new RuntimeException("No desired endpoints supported"));
+			 if(endpoint == null) { 
+				 throw new CoreException ("Endpoint with SecurityPolicy " + connector.getSecurityPolicy().getCaption() + " not found");
+			 }
+			return endpoint; 
 		}
 		catch (Exception e) {
 			throw new CoreException("Unable to setup endpoints for Server: " + connector.getServerID() + ". Exception: " + e.getMessage(), e);

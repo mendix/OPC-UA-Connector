@@ -28,7 +28,7 @@ public class OpcUaUpdateCachedServerSettings extends CustomJavaAction<java.lang.
 	@java.lang.Override
 	public java.lang.Void executeAction() throws Exception
 	{
-		this.ServerConfig = __ServerConfig == null ? null : opcuaclientmx.proxies.OpcUaServerCfg.initialize(getContext(), __ServerConfig);
+		this.ServerConfig = this.__ServerConfig == null ? null : opcuaclientmx.proxies.OpcUaServerCfg.initialize(getContext(), __ServerConfig);
 
 		// BEGIN USER CODE
 
@@ -40,6 +40,7 @@ public class OpcUaUpdateCachedServerSettings extends CustomJavaAction<java.lang.
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

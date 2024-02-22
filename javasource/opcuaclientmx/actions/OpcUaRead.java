@@ -39,7 +39,7 @@ public class OpcUaRead extends CustomJavaAction<java.lang.String>
 	@java.lang.Override
 	public java.lang.String executeAction() throws Exception
 	{
-		this.OpcUaServerCfg = __OpcUaServerCfg == null ? null : opcuaclientmx.proxies.OpcUaServerCfg.initialize(getContext(), __OpcUaServerCfg);
+		this.OpcUaServerCfg = this.__OpcUaServerCfg == null ? null : opcuaclientmx.proxies.OpcUaServerCfg.initialize(getContext(), __OpcUaServerCfg);
 
 		// BEGIN USER CODE
 		OpcUaClient client = OpcUaClientManager.retrieve(this.context(), this.OpcUaServerCfg);
@@ -87,6 +87,7 @@ public class OpcUaRead extends CustomJavaAction<java.lang.String>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

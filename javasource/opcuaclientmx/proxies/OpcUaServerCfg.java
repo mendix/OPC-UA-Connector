@@ -22,16 +22,18 @@ public class OpcUaServerCfg extends system.proxies.FileDocument
 		Password("Password"),
 		Password_Encrypted("Password_Encrypted"),
 		AuthenticationType("AuthenticationType"),
-		CertificatePassword("CertificatePassword"),
-		CertifcatePassword_Encrypted("CertifcatePassword_Encrypted"),
+		SecurityPolicy("SecurityPolicy"),
+		SecurityMode("SecurityMode"),
 		FileID("FileID"),
 		Name("Name"),
 		DeleteAfterDownload("DeleteAfterDownload"),
 		Contents("Contents"),
 		HasContents("HasContents"),
-		Size("Size");
+		Size("Size"),
+		AuthenticationCertificate("OpcUaClientMx.AuthenticationCertificate"),
+		ServerCertificate("OpcUaClientMx.ServerCertificate");
 
-		private java.lang.String metaName;
+		private final java.lang.String metaName;
 
 		MemberNames(java.lang.String s)
 		{
@@ -47,14 +49,15 @@ public class OpcUaServerCfg extends system.proxies.FileDocument
 
 	public OpcUaServerCfg(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		this(context, com.mendix.core.Core.instantiate(context, "OpcUaClientMx.OpcUaServerCfg"));
+		this(context, com.mendix.core.Core.instantiate(context, entityName));
 	}
 
 	protected OpcUaServerCfg(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject opcUaServerCfgMendixObject)
 	{
 		super(context, opcUaServerCfgMendixObject);
-		if (!com.mendix.core.Core.isSubClassOf("OpcUaClientMx.OpcUaServerCfg", opcUaServerCfgMendixObject.getType()))
-			throw new java.lang.IllegalArgumentException("The given object is not a OpcUaClientMx.OpcUaServerCfg");
+		if (!com.mendix.core.Core.isSubClassOf(entityName, opcUaServerCfgMendixObject.getType())) {
+			throw new java.lang.IllegalArgumentException(String.format("The given object is not a %s", entityName));
+		}	
 	}
 
 	/**
@@ -69,6 +72,9 @@ public class OpcUaServerCfg extends system.proxies.FileDocument
 	/**
 	 * Initialize a proxy using context (recommended). This context will be used for security checking when the get- and set-methods without context parameters are called.
 	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.createSudoClone() can be used to obtain sudo access).
+	 * @param context The context to be used
+	 * @param mendixObject The Mendix object for the new instance
+	 * @return a new instance of this proxy class
 	 */
 	public static opcuaclientmx.proxies.OpcUaServerCfg initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
@@ -83,10 +89,11 @@ public class OpcUaServerCfg extends system.proxies.FileDocument
 
 	public static java.util.List<opcuaclientmx.proxies.OpcUaServerCfg> load(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String xpathConstraint) throws com.mendix.core.CoreException
 	{
-		java.util.List<opcuaclientmx.proxies.OpcUaServerCfg> result = new java.util.ArrayList<opcuaclientmx.proxies.OpcUaServerCfg>();
-		for (com.mendix.systemwideinterfaces.core.IMendixObject obj : com.mendix.core.Core.retrieveXPathQuery(context, "//OpcUaClientMx.OpcUaServerCfg" + xpathConstraint))
-			result.add(opcuaclientmx.proxies.OpcUaServerCfg.initialize(context, obj));
-		return result;
+		return com.mendix.core.Core.createXPathQuery(String.format("//%1$s%2$s", entityName, xpathConstraint))
+			.execute(context)
+			.stream()
+			.map(obj -> opcuaclientmx.proxies.OpcUaServerCfg.initialize(context, obj))
+			.collect(java.util.stream.Collectors.toList());
 	}
 
 	/**
@@ -285,9 +292,9 @@ public class OpcUaServerCfg extends system.proxies.FileDocument
 	public final opcuaclientmx.proxies.AuthenticationType getAuthenticationType(com.mendix.systemwideinterfaces.core.IContext context)
 	{
 		Object obj = getMendixObject().getValue(context, MemberNames.AuthenticationType.toString());
-		if (obj == null)
+		if (obj == null) {
 			return null;
-
+		}
 		return opcuaclientmx.proxies.AuthenticationType.valueOf((java.lang.String) obj);
 	}
 
@@ -307,90 +314,203 @@ public class OpcUaServerCfg extends system.proxies.FileDocument
 	 */
 	public final void setAuthenticationType(com.mendix.systemwideinterfaces.core.IContext context, opcuaclientmx.proxies.AuthenticationType authenticationtype)
 	{
-		if (authenticationtype != null)
+		if (authenticationtype != null) {
 			getMendixObject().setValue(context, MemberNames.AuthenticationType.toString(), authenticationtype.toString());
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.AuthenticationType.toString(), null);
+		}
 	}
 
 	/**
-	 * @return value of CertificatePassword
+	 * Set value of SecurityPolicy
+	 * @param securitypolicy
 	 */
-	public final java.lang.String getCertificatePassword()
+	public final opcuaclientmx.proxies.SecurityPolicy getSecurityPolicy()
 	{
-		return getCertificatePassword(getContext());
-	}
-
-	/**
-	 * @param context
-	 * @return value of CertificatePassword
-	 */
-	public final java.lang.String getCertificatePassword(com.mendix.systemwideinterfaces.core.IContext context)
-	{
-		return (java.lang.String) getMendixObject().getValue(context, MemberNames.CertificatePassword.toString());
-	}
-
-	/**
-	 * Set value of CertificatePassword
-	 * @param certificatepassword
-	 */
-	public final void setCertificatePassword(java.lang.String certificatepassword)
-	{
-		setCertificatePassword(getContext(), certificatepassword);
-	}
-
-	/**
-	 * Set value of CertificatePassword
-	 * @param context
-	 * @param certificatepassword
-	 */
-	public final void setCertificatePassword(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String certificatepassword)
-	{
-		getMendixObject().setValue(context, MemberNames.CertificatePassword.toString(), certificatepassword);
-	}
-
-	/**
-	 * @return value of CertifcatePassword_Encrypted
-	 */
-	public final java.lang.String getCertifcatePassword_Encrypted()
-	{
-		return getCertifcatePassword_Encrypted(getContext());
+		return getSecurityPolicy(getContext());
 	}
 
 	/**
 	 * @param context
-	 * @return value of CertifcatePassword_Encrypted
+	 * @return value of SecurityPolicy
 	 */
-	public final java.lang.String getCertifcatePassword_Encrypted(com.mendix.systemwideinterfaces.core.IContext context)
+	public final opcuaclientmx.proxies.SecurityPolicy getSecurityPolicy(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		return (java.lang.String) getMendixObject().getValue(context, MemberNames.CertifcatePassword_Encrypted.toString());
+		Object obj = getMendixObject().getValue(context, MemberNames.SecurityPolicy.toString());
+		if (obj == null) {
+			return null;
+		}
+		return opcuaclientmx.proxies.SecurityPolicy.valueOf((java.lang.String) obj);
 	}
 
 	/**
-	 * Set value of CertifcatePassword_Encrypted
-	 * @param certifcatepassword_encrypted
+	 * Set value of SecurityPolicy
+	 * @param securitypolicy
 	 */
-	public final void setCertifcatePassword_Encrypted(java.lang.String certifcatepassword_encrypted)
+	public final void setSecurityPolicy(opcuaclientmx.proxies.SecurityPolicy securitypolicy)
 	{
-		setCertifcatePassword_Encrypted(getContext(), certifcatepassword_encrypted);
+		setSecurityPolicy(getContext(), securitypolicy);
 	}
 
 	/**
-	 * Set value of CertifcatePassword_Encrypted
+	 * Set value of SecurityPolicy
 	 * @param context
-	 * @param certifcatepassword_encrypted
+	 * @param securitypolicy
 	 */
-	public final void setCertifcatePassword_Encrypted(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String certifcatepassword_encrypted)
+	public final void setSecurityPolicy(com.mendix.systemwideinterfaces.core.IContext context, opcuaclientmx.proxies.SecurityPolicy securitypolicy)
 	{
-		getMendixObject().setValue(context, MemberNames.CertifcatePassword_Encrypted.toString(), certifcatepassword_encrypted);
+		if (securitypolicy != null) {
+			getMendixObject().setValue(context, MemberNames.SecurityPolicy.toString(), securitypolicy.toString());
+		} else {
+			getMendixObject().setValue(context, MemberNames.SecurityPolicy.toString(), null);
+		}
+	}
+
+	/**
+	 * Set value of SecurityMode
+	 * @param securitymode
+	 */
+	public final opcuaclientmx.proxies.SecurityMode getSecurityMode()
+	{
+		return getSecurityMode(getContext());
+	}
+
+	/**
+	 * @param context
+	 * @return value of SecurityMode
+	 */
+	public final opcuaclientmx.proxies.SecurityMode getSecurityMode(com.mendix.systemwideinterfaces.core.IContext context)
+	{
+		Object obj = getMendixObject().getValue(context, MemberNames.SecurityMode.toString());
+		if (obj == null) {
+			return null;
+		}
+		return opcuaclientmx.proxies.SecurityMode.valueOf((java.lang.String) obj);
+	}
+
+	/**
+	 * Set value of SecurityMode
+	 * @param securitymode
+	 */
+	public final void setSecurityMode(opcuaclientmx.proxies.SecurityMode securitymode)
+	{
+		setSecurityMode(getContext(), securitymode);
+	}
+
+	/**
+	 * Set value of SecurityMode
+	 * @param context
+	 * @param securitymode
+	 */
+	public final void setSecurityMode(com.mendix.systemwideinterfaces.core.IContext context, opcuaclientmx.proxies.SecurityMode securitymode)
+	{
+		if (securitymode != null) {
+			getMendixObject().setValue(context, MemberNames.SecurityMode.toString(), securitymode.toString());
+		} else {
+			getMendixObject().setValue(context, MemberNames.SecurityMode.toString(), null);
+		}
+	}
+
+	/**
+	 * @throws com.mendix.core.CoreException
+	 * @return value of AuthenticationCertificate
+	 */
+	public final opcuaclientmx.proxies.Certificate getAuthenticationCertificate() throws com.mendix.core.CoreException
+	{
+		return getAuthenticationCertificate(getContext());
+	}
+
+	/**
+	 * @param context
+	 * @return value of AuthenticationCertificate
+	 * @throws com.mendix.core.CoreException
+	 */
+	public final opcuaclientmx.proxies.Certificate getAuthenticationCertificate(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
+	{
+		opcuaclientmx.proxies.Certificate result = null;
+		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.AuthenticationCertificate.toString());
+		if (identifier != null) {
+			result = opcuaclientmx.proxies.Certificate.load(context, identifier);
+		}
+		return result;
+	}
+
+	/**
+	 * Set value of AuthenticationCertificate
+	 * @param authenticationcertificate
+	 */
+	public final void setAuthenticationCertificate(opcuaclientmx.proxies.Certificate authenticationcertificate)
+	{
+		setAuthenticationCertificate(getContext(), authenticationcertificate);
+	}
+
+	/**
+	 * Set value of AuthenticationCertificate
+	 * @param context
+	 * @param authenticationcertificate
+	 */
+	public final void setAuthenticationCertificate(com.mendix.systemwideinterfaces.core.IContext context, opcuaclientmx.proxies.Certificate authenticationcertificate)
+	{
+		if (authenticationcertificate == null) {
+			getMendixObject().setValue(context, MemberNames.AuthenticationCertificate.toString(), null);
+		} else {
+			getMendixObject().setValue(context, MemberNames.AuthenticationCertificate.toString(), authenticationcertificate.getMendixObject().getId());
+		}
+	}
+
+	/**
+	 * @throws com.mendix.core.CoreException
+	 * @return value of ServerCertificate
+	 */
+	public final opcuaclientmx.proxies.Certificate getServerCertificate() throws com.mendix.core.CoreException
+	{
+		return getServerCertificate(getContext());
+	}
+
+	/**
+	 * @param context
+	 * @return value of ServerCertificate
+	 * @throws com.mendix.core.CoreException
+	 */
+	public final opcuaclientmx.proxies.Certificate getServerCertificate(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
+	{
+		opcuaclientmx.proxies.Certificate result = null;
+		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.ServerCertificate.toString());
+		if (identifier != null) {
+			result = opcuaclientmx.proxies.Certificate.load(context, identifier);
+		}
+		return result;
+	}
+
+	/**
+	 * Set value of ServerCertificate
+	 * @param servercertificate
+	 */
+	public final void setServerCertificate(opcuaclientmx.proxies.Certificate servercertificate)
+	{
+		setServerCertificate(getContext(), servercertificate);
+	}
+
+	/**
+	 * Set value of ServerCertificate
+	 * @param context
+	 * @param servercertificate
+	 */
+	public final void setServerCertificate(com.mendix.systemwideinterfaces.core.IContext context, opcuaclientmx.proxies.Certificate servercertificate)
+	{
+		if (servercertificate == null) {
+			getMendixObject().setValue(context, MemberNames.ServerCertificate.toString(), null);
+		} else {
+			getMendixObject().setValue(context, MemberNames.ServerCertificate.toString(), servercertificate.getMendixObject().getId());
+		}
 	}
 
 	@java.lang.Override
 	public boolean equals(Object obj)
 	{
-		if (obj == this)
+		if (obj == this) {
 			return true;
-
+		}
 		if (obj != null && getClass().equals(obj.getClass()))
 		{
 			final opcuaclientmx.proxies.OpcUaServerCfg that = (opcuaclientmx.proxies.OpcUaServerCfg) obj;
@@ -410,7 +530,7 @@ public class OpcUaServerCfg extends system.proxies.FileDocument
 	 */
 	public static java.lang.String getType()
 	{
-		return "OpcUaClientMx.OpcUaServerCfg";
+		return entityName;
 	}
 
 	/**

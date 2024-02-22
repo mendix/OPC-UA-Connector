@@ -29,7 +29,7 @@ public class Message
 		ServerTime("ServerTime"),
 		FullMessage("FullMessage");
 
-		private java.lang.String metaName;
+		private final java.lang.String metaName;
 
 		MemberNames(java.lang.String s)
 		{
@@ -45,15 +45,17 @@ public class Message
 
 	public Message(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		this(context, com.mendix.core.Core.instantiate(context, "OpcUaClientMx.Message"));
+		this(context, com.mendix.core.Core.instantiate(context, entityName));
 	}
 
 	protected Message(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject messageMendixObject)
 	{
-		if (messageMendixObject == null)
+		if (messageMendixObject == null) {
 			throw new java.lang.IllegalArgumentException("The given object cannot be null.");
-		if (!com.mendix.core.Core.isSubClassOf("OpcUaClientMx.Message", messageMendixObject.getType()))
-			throw new java.lang.IllegalArgumentException("The given object is not a OpcUaClientMx.Message");
+		}
+		if (!com.mendix.core.Core.isSubClassOf(entityName, messageMendixObject.getType())) {
+			throw new java.lang.IllegalArgumentException(String.format("The given object is not a %s", entityName));
+		}	
 
 		this.messageMendixObject = messageMendixObject;
 		this.context = context;
@@ -71,6 +73,9 @@ public class Message
 	/**
 	 * Initialize a proxy using context (recommended). This context will be used for security checking when the get- and set-methods without context parameters are called.
 	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.createSudoClone() can be used to obtain sudo access).
+	 * @param context The context to be used
+	 * @param mendixObject The Mendix object for the new instance
+	 * @return a new instance of this proxy class
 	 */
 	public static opcuaclientmx.proxies.Message initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
@@ -85,6 +90,7 @@ public class Message
 
 	/**
 	 * Commit the changes made on this proxy object.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit() throws com.mendix.core.CoreException
 	{
@@ -93,6 +99,7 @@ public class Message
 
 	/**
 	 * Commit the changes made on this proxy object using the specified context.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
@@ -421,9 +428,9 @@ public class Message
 	@java.lang.Override
 	public boolean equals(Object obj)
 	{
-		if (obj == this)
+		if (obj == this) {
 			return true;
-
+		}
 		if (obj != null && getClass().equals(obj.getClass()))
 		{
 			final opcuaclientmx.proxies.Message that = (opcuaclientmx.proxies.Message) obj;
@@ -443,7 +450,7 @@ public class Message
 	 */
 	public static java.lang.String getType()
 	{
-		return "OpcUaClientMx.Message";
+		return entityName;
 	}
 
 	/**
