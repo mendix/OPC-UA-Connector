@@ -3,7 +3,10 @@ import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.
 
 import java.io.File;
 import java.io.IOException;
-import java.security.cert.X509Certificate;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /*JV May/June 2020*/
 import java.util.HashMap;
 import java.util.List;
@@ -20,8 +23,7 @@ import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
 import org.eclipse.milo.opcua.stack.client.security.DefaultClientCertificateValidator;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.security.DefaultTrustListManager;
-import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
-import org.eclipse.milo.opcua.stack.core.security.TrustListManager;
+
 import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
@@ -198,24 +200,46 @@ public class OpcUaClientManager {
 		    }
 		    
 		    if (connector.getSecurityMode() != SecurityMode.None)  {
-		    	//load keys and certifcates
-		    	OpcUaClientKeyStoreLoader keyStoreLoader = new OpcUaClientKeyStoreLoader().load(context, connector ); 
-		    	
-		    	cfg.setIdentityProvider(new X509IdentityProvider(keyStoreLoader.getClientCertificate(), keyStoreLoader.getClientKeyPair().getPrivate())); 
-
-		    	cfg.setCertificateChain(new X509Certificate[]{keyStoreLoader.getServerCertificate()});
-		    	cfg.setKeyPair(keyStoreLoader.getClientKeyPair());
-
-		    	DefaultTrustListManager defaultTrustListManager;
-				try {
-					defaultTrustListManager = new DefaultTrustListManager(new File(System.getProperty("java.io.tmpdir")));
-			    	defaultTrustListManager.addTrustedCertificate(keyStoreLoader.getServerCertificate());			    	
-			    	cfg.setCertificateValidator(new DefaultClientCertificateValidator(defaultTrustListManager));
-
+		    	//load keys and certifcates		    	
+		    	try {
+			    	Path securityTempDir = Paths.get(System.getProperty("java.io.tmpdir"), "client", "security");
+			        Files.createDirectories(securityTempDir);
+			        if (!Files.exists(securityTempDir)) {
+			            throw new CoreException("unable to create security dir: " + securityTempDir);
+			        }
+	
+			        File pkiDir = securityTempDir.resolve("pki").toFile();
+	
+			        MxClientKeyStoreLoader mxKeyStoreLoader = new MxClientKeyStoreLoader().load(securityTempDir, context, connector ); 
+			        DefaultTrustListManager trustListManager = new DefaultTrustListManager(pkiDir);
+			        DefaultClientCertificateValidator certificateValidator =
+			            new DefaultClientCertificateValidator(trustListManager);
+				
+					trustListManager.addTrustedCertificate(mxKeyStoreLoader.getServerCertificate());
+					
+					
+			        //Use this KeyStoreloader when to test with self generated selfSignedKeys
+			        if(mxKeyStoreLoader.UseSelfSignedGeneratedClientCertificates()) {
+					
+			        	//Generate self signed certificates using App URI.    	
+			        	DefaultSelfSignedKeyStoreLoader keyStoreLoader = new DefaultSelfSignedKeyStoreLoader().load(securityTempDir, Constants.getUA_ApplicationURI());
+			        	cfg.setKeyPair(keyStoreLoader.getClientKeyPair());
+				    	cfg.setCertificate(keyStoreLoader.getClientCertificate());
+				    	cfg.setCertificateChain(keyStoreLoader.getClientCertificateChain());
+				    	
+			        }
+			        else {
+			        	cfg.setKeyPair(mxKeyStoreLoader.getClientKeyPair());
+				    	cfg.setCertificate(mxKeyStoreLoader.getClientCertificate());
+				    	cfg.setCertificateChain(mxKeyStoreLoader.getClientCertificateChain());
+				    	
+			        }
+			        	
+			    	cfg.setCertificateValidator(certificateValidator);
+			    	
 				} catch (IOException e) {
 					throw new CoreException(e);
 				}
-
 		    }		    			   		   
 
         return cfg;
